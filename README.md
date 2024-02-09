@@ -1,2 +1,2 @@
-# CS157C-NoSQL-Cassandra-Project
-Team 9
+# CS157C-Team9
+Using NoSQL Database Cassandra
