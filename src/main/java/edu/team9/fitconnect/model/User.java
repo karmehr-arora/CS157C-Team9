@@ -1,4 +1,4 @@
-package edu.team9.fitconnect.Model;
+package edu.team9.fitconnect.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

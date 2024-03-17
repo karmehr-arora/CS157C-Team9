@@ -1,6 +1,6 @@
 package edu.team9.fitconnect.repository;
 
-import edu.team9.fitconnect.Model.User;
+import edu.team9.fitconnect.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 
