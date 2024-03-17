@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class FrontEndController {
     UserService userService;
 
-    @GetMapping("/{name}")
-    public String getHome(@PathVariable String name, Model model){
-        userService.createUser("Costi", "asdfasf", 0, 0);
-        model.addAttribute("name", name);
-        return "Home";
+    @GetMapping("/login")
+    public String getLogin() {
+        return "main/login";
+    }
+
+    @GetMapping("/create-user")
+    public String getHome(Model model){
+        userService.createUser("Costi", "costik", "costik@costik.com", "1234", 0, 0);
+        model.addAttribute("name", "test");
+        return "main/Home";
     }
 }
