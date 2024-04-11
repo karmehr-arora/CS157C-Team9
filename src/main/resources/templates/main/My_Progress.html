@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Progress</title>
+    <style>
+        .actions-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-container {
+            width: 50%;
+            height: 400px;
+        }
+        .badges-container {
+            display: flex;
+            justify-content: center;
+        }
+        .badge {
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>My Progress</h1>
+
+<div class="actions-container">
+    <h2>Actions</h2>
+    <button type="button">Input new weight</button>
+    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+        <label for="fileInput">Add Progress Photo:</label>
+        <input type="file" id="fileInput" name="fileInput">
+        <button type="submit">Upload</button>
+    </form>
+    <button type="button">Goal setting</button>
+</div>
+
+<div class="chart-container">
+    <!-- chart here -->
+</div>
+<div class="badges-container">
+    <!-- Add badge images or icons here -->
+    <img class="badge" src="badge1.png" alt="Badge 1">
+    <img class="badge" src="badge2.png" alt="Badge 2">
+    <img class="badge" src="badge3.png" alt="Badge 3">
+</div>
+
+</body>
+</html>
