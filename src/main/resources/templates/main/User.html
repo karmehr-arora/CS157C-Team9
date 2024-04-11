@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="~{components/Header :: header('Fitconnect')}"></head>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<h1>Home</h1>
+<p th:text="${name}"></p>
+<button type="button" class="btn btn-danger">Danger</button>
+<p>update password</p>
+<p>update username</p>
+<p>delete account</p>
+<form th:action ="@{/login}" method="post">
+    <div><label> User Name : <input type="text" name="username"/> </label></div>
+    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><input type="submit" value="confirm deletion"/></div>
+</form>
+</body>
+</html>
+
+
+
