@@ -4,48 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Progress</title>
-    <style>
-        .actions-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .chart-container {
-            width: 50%;
-            height: 400px;
-        }
-        .badges-container {
-            display: flex;
-            justify-content: center;
-        }
-        .badge {
-            margin: 0 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<h1>My Progress</h1>
+<div class="container">
+    <h1>My Progress</h1>
 
-<div class="actions-container">
-    <h2>Actions</h2>
-    <button type="button">Input new weight</button>
-    <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-        <label for="fileInput">Add Progress Photo:</label>
-        <input type="file" id="fileInput" name="fileInput">
-        <button type="submit">Upload</button>
-    </form>
-    <button type="button">Goal setting</button>
-</div>
+    <div class="actions-container">
+        <h2>Actions</h2>
+        <button class="fancy-button" type="button" id="inputWeightBtn">Input new weight</button>
+        <button class="fancy-button" type="button" id="addPhotoBtn">Add Progress Photo</button>
+        <button class="fancy-button" type="button">Goal setting</button>
+    </div>
 
-<div class="chart-container">
-    <!-- chart here -->
-</div>
-<div class="badges-container">
-    <!-- Add badge images or icons here -->
-    <img class="badge" src="badge1.png" alt="Badge 1">
-    <img class="badge" src="badge2.png" alt="Badge 2">
-    <img class="badge" src="badge3.png" alt="Badge 3">
-</div>
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Upload Progress Photo</h2>
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="fileInput">
+                <button class="fancy-button" type="submit">Upload</button>
+            </form>
+        </div>
+    </div>
 
+    <div id="weightModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enter Your New Weight</h2>
+            <form id="weightForm">
+                <input type="text" id="weightInput" placeholder="Enter your weight">
+                <button class="fancy-button" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="chart-container">
+        <!-- chart here -->
+    </div>
+    <div class="badges-container">
+        <img class="badge" src="badge1.png" alt="Badge 1">
+        <img class="badge" src="badge2.png" alt="Badge 2">
+        <img class="badge" src="badge3.png" alt="Badge 3">
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
