@@ -30,7 +30,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    private final UserService userService;
+    private UserService userService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
