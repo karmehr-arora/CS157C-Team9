@@ -34,10 +34,14 @@ public class User implements UserDetails {
         return null;
     }
 
+    private void setPassword(String newPassword) {password = newPassword;}
+
     @Override
     public String getPassword() {
         return password;
     }
+
+    public void setUsername(String newUsername) {username = newUsername;}
 
     @Override
     public String getUsername() {
