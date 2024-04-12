@@ -23,4 +23,14 @@ public class FrontEndController {
         model.addAttribute("name", "test");
         return "main/Home";
     }
+
+    @GetMapping("/myprogress")
+    public String getMyProgress() {
+        return "main/My_Progress";
+    }
+
+    @GetMapping("/account")
+    public String getAccount() {
+        return "main/user";
+    }
 }
