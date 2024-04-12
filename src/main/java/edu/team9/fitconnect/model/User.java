@@ -18,13 +18,13 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @PrimaryKey
-    private UUID id;
     private String username;
     private String firstName;
     private String email;
     private int weight;
     private int heightInInches;
     private String password;
+    private Role role;
 
     boolean isEnabled;
     boolean isLocked;
@@ -34,14 +34,10 @@ public class User implements UserDetails {
         return null;
     }
 
-    private void setPassword(String newPassword) {password = newPassword;}
-
     @Override
     public String getPassword() {
         return password;
     }
-
-    public void setUsername(String newUsername) {username = newUsername;}
 
     @Override
     public String getUsername() {
@@ -66,5 +62,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isEnabled;
+    }
+
+    public enum Role{
+        ADMIN,
+        USER
     }
 }

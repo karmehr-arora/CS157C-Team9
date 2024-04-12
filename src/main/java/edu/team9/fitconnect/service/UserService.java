@@ -23,10 +23,10 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public void createUser(String firstName, String username, String email, String password, int weight, int height){
+    public void createUser(String firstName, String username, String email, String password, int weight, int height, User.Role role){
         // Encode password!
         String encodedPass = bCryptPasswordEncoder().encode(password);
-        User newUser = new User(UUID.randomUUID(), username, firstName, email, weight, height, encodedPass, true, false);
+        User newUser = new User(username, firstName, email, weight, height, encodedPass, role, true, false);
 
         userRepository.save(newUser);
 
@@ -36,6 +36,15 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findByEmail(username);
+        if(optionalUser.isPresent()){
+            return optionalUser.get();
+        }else{
+            throw new UsernameNotFoundException("Username was not found");
+        }
+    }
+
+    public User getUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(username);
         if(optionalUser.isPresent()){
             return optionalUser.get();
