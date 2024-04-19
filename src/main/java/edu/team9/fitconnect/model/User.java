@@ -39,11 +39,18 @@ public class User implements UserDetails {
         return password;
     }
 
+    public void setPassword(String pass) {
+        password = pass;
+    }
+
     @Override
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String newUsername) {
+        username = newUsername;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
