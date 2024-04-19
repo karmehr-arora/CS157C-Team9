@@ -5,7 +5,7 @@
 <h1>Account</h1>
 <p th:text="${name}"></p>
 <!--<button type="button" class="btn btn-danger">Danger</button>-->
-<h2>Update Username</h2>
+<h2 th:text="${user.getEmail()}">Update Username</h2>
 <form th:action ="@{/user}" method="post">
     <div><label> New User Name : <input type="text" name="username"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>

@@ -21,7 +21,7 @@ public class FrontEndController {
             return new User("NULL", "NULL", "Not Signed In", 0, 0, "", User.Role.USER, false, true);
         }
         String username = principal.getName();
-        return userService.getUserByUsername(username);
+        return (User) userService.loadUserByUsername(username);
     }
 
     @ModelAttribute
@@ -50,7 +50,7 @@ public class FrontEndController {
 
     @GetMapping("/create-user")
     public String getHome(Model model){
-        userService.createUser("Costi", "costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);
+        userService.createUser("Costi", "costik@costik.com","costik", "1234", 0, 0, User.Role.USER);
         model.addAttribute("name", "test");
         return "main/Home";
     }

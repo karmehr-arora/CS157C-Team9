@@ -18,9 +18,9 @@ import java.util.UUID;
 public class User implements UserDetails {
 
     @PrimaryKey
-    private String username;
-    private String firstName;
     private String email;
+    private String firstName;
+    private String displayname;
     private int weight;
     private int heightInInches;
     private String password;
@@ -39,17 +39,9 @@ public class User implements UserDetails {
         return password;
     }
 
-    public void setPassword(String pass) {
-        password = pass;
-    }
-
     @Override
     public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String newUsername) {
-        username = newUsername;
+        return email;
     }
     @Override
     public boolean isAccountNonExpired() {

@@ -18,7 +18,6 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
     UserRepository userRepository;
 
-    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -35,8 +34,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isPresent()){
             return optionalUser.get();
         }else{
@@ -44,12 +43,4 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public User getUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> optionalUser = userRepository.findByEmail(username);
-        if(optionalUser.isPresent()){
-            return optionalUser.get();
-        }else{
-            throw new UsernameNotFoundException("Username was not found");
-        }
-    }
 }
