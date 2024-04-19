@@ -43,6 +43,11 @@ public class FrontEndController {
         return "main/login";
     }
 
+    @GetMapping("/home")
+    public String getHome() {
+        return "main/Home";
+    }
+
     @GetMapping("/create-user")
     public String getHome(Model model){
         userService.createUser("Costi", "costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);
@@ -57,6 +62,6 @@ public class FrontEndController {
 
     @GetMapping("/account")
     public String getAccount() {
-        return "main/user";
+        return "main/Account";
     }
 }
