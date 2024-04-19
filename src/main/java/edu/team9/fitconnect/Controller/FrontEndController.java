@@ -36,14 +36,12 @@ public class FrontEndController {
         model.addAttribute("loggedIn", principal != null);
     }
 
-
-
     @GetMapping("/login")
     public String getLogin() {
         return "main/login";
     }
 
-    @GetMapping("/home")
+    @GetMapping("/")
     public String getHome() {
         return "main/Home";
     }
