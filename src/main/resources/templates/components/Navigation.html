@@ -1,7 +1,7 @@
 <div th:fragment="navbar">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">FitConnect</a>
+            <a class="navbar-brand" href="/">FitConnect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -11,22 +11,22 @@
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="MyProgress">My Progress</a>
+                        <a class="nav-link" href="/myprogress">My Progress</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="workouts">Workouts</a>
+                        <a class="nav-link" href="/workouts">Workouts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="challenges">Challenges</a>
+                        <a class="nav-link" href="/challenges">Challenges</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             User Settings
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="account">Account</a></li>
-                            <li><a class="dropdown-item" href="notifications">Notifications</a></li>
-                            <li><a class="dropdown-item" href="login">Logout</a></li>
+                            <li><a class="dropdown-item" href="/account">Account</a></li>
+                            <li><a class="dropdown-item" href="/notifications">Notifications</a></li>
+                            <li><a class="dropdown-item" href="/login">Logout</a></li>
                         </ul>
                     </li>
                 </ul>

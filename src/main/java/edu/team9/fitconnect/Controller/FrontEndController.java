@@ -43,10 +43,10 @@ public class FrontEndController {
         return "main/Account";
     }
 
-//    @PostMapping(value = "/main/Account")
-//    public void updatePassword(@RequestParam String newPass, @RequestParam String currPassword){
-//        if (currPassword.equals(user.getPassword())){
-//            user.setPassword(newPass);
+//    @PostMapping(value = "/main/login")
+//    public void updatePassword(@RequestParam String newPass, @RequestParam String currPassword, Principal principal){
+//        if (currPassword.equals()){
+//
 //        }
 //    }
 //
@@ -76,7 +76,7 @@ public class FrontEndController {
 
     @GetMapping("/myprogress")
     public String getMyProgress() {
-        return "main/My_Progress";
+        return "main/MyProgress";
     }
 
     @GetMapping("/account")

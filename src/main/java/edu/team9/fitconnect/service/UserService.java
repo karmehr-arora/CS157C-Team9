@@ -35,10 +35,19 @@ public class UserService implements UserDetailsService {
 
 
     public void updateDisplayName(String displayName, String email){
-        System.out.println(displayName + "\n" + email);
         User user = (User)loadUserByUsername(email);
         user.setDisplayname(displayName);
         userRepository.save(user);
+    }
+
+    public void updatePassword(String password, String email){
+        User user = (User)loadUserByUsername(email);
+        user.setPassword(password);
+        userRepository.save(user);
+    }
+
+    public void deleteAccount(String email){
+        User user = (User)loadUserByUsername(email);
     }
 
     @Override
