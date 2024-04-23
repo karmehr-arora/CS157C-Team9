@@ -1,13 +1,12 @@
 package edu.team9.fitconnect.Controller;
 
 import edu.team9.fitconnect.model.User;
+import edu.team9.fitconnect.repository.UserRepository;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -15,7 +14,6 @@ import java.security.Principal;
 @AllArgsConstructor
 public class FrontEndController {
     UserService userService;
-
     private User getCurrentUser(Principal principal) {
         if (principal == null) {
             return new User("NULL", "NULL", "Not Signed In", 0, 0, "", User.Role.USER, false, true);
@@ -35,6 +33,29 @@ public class FrontEndController {
         // User is logged in or out
         model.addAttribute("loggedIn", principal != null);
     }
+
+    @PostMapping(value = "/account")
+    public String updateUsername(@RequestParam String displayName, @RequestParam String confirmDisplayName, Principal principal){
+        if(displayName.equals(confirmDisplayName)){
+            userService.updateDisplayName(displayName, principal.getName());
+            return "main/Account";
+        }
+        return "main/Account";
+    }
+
+//    @PostMapping(value = "/main/Account")
+//    public void updatePassword(@RequestParam String newPass, @RequestParam String currPassword){
+//        if (currPassword.equals(user.getPassword())){
+//            user.setPassword(newPass);
+//        }
+//    }
+//
+//    @PostMapping(value = "/main/Account")
+//    public void deleteAccount(@RequestParam String userID, @RequestParam String userPassword){
+//        if (userPassword.equals(user.getPassword())){
+//            user.delete();
+//        }
+//    }
 
     @GetMapping("/login")
     public String getLogin() {

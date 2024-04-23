@@ -33,6 +33,14 @@ public class UserService implements UserDetailsService {
                 .forEach(v -> System.out.println(v.getFirstName()));
     }
 
+
+    public void updateDisplayName(String displayName, String email){
+        System.out.println(displayName + "\n" + email);
+        User user = (User)loadUserByUsername(email);
+        user.setDisplayname(displayName);
+        userRepository.save(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(email);

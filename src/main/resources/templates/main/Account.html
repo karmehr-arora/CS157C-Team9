@@ -2,27 +2,30 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
-<h1>Account</h1>
+<h1>Account Settings</h1>
 <p th:text="${name}"></p>
 <!--<button type="button" class="btn btn-danger">Danger</button>-->
-<h2 th:text="${user.getEmail()}">Update Username</h2>
-<form th:action ="@{/user}" method="post">
-    <div><label> New User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Confirm Username"/></div>
+<h2 th:text="${user.getEmail()}">Update Display Name</h2>
+<form th:action ="@{/account}" method="post">
+    <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
+    <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
+    <div><input type="submit" value="Confirm"/></div>
 </form>
+
 <h2>Update Password</h2>
 <form th:action ="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><label> User Name : <input type="text" name="password"/> </label></div>
+    <div><label> Password: <input type="text" name="confirmPassword"/> </label></div>
     <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
-    <div><input type="submit" value="confirm new password"/></div>
+    <div><input type="submit" value="Confirm"/></div>
 </form>
+
 <h2>Delete Account</h2>
 <form th:action ="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
+    <div><label> Username: <input type="text" name="displayName"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="confirm deletion"/></div>
+    <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
+    <div><input type="submit" value="Confirm"/></div>
 </form>
 </body>
 </html>
