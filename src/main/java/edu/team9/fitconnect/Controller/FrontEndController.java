@@ -4,6 +4,8 @@ import edu.team9.fitconnect.model.User;
 import edu.team9.fitconnect.repository.UserRepository;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,10 @@ import java.security.Principal;
 @AllArgsConstructor
 public class FrontEndController {
     UserService userService;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     private User getCurrentUser(Principal principal) {
         if (principal == null) {
             return new User("NULL", "NULL", "Not Signed In", 0, 0, "", User.Role.USER, false, true);
@@ -43,14 +49,21 @@ public class FrontEndController {
         return "main/Account";
     }
 
-//    @PostMapping(value = "/main/login")
-//    public void updatePassword(@RequestParam String newPass, @RequestParam String currPassword, Principal principal){
-//        if (currPassword.equals()){
-//
-//        }
-//    }
-//
-//    @PostMapping(value = "/main/Account")
+    @PostMapping(value = "/updatepassword")
+    public String updatePassword(@RequestParam String password, @RequestParam String newPassword, @RequestParam String confirmNewPassword, Principal principal){
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (encoder.matches(password, user.getPassword())){
+            if(newPassword.equals(confirmNewPassword)){
+                userService.updatePassword(encoder.encode(newPassword), principal.getName());
+                return "main/login";
+            }
+        }
+        return "/account";
+    }
+
+//    @PostMapping(value = "/delete")
 //    public void deleteAccount(@RequestParam String userID, @RequestParam String userPassword){
 //        if (userPassword.equals(user.getPassword())){
 //            user.delete();

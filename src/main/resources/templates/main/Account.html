@@ -13,16 +13,16 @@
 </form>
 
 <h2>Update Password</h2>
-<form th:action ="@{/login}" method="post">
-    <div><label> Current Password: <input type="text" name="password"/> </label></div>
-    <div><label> New Password: <input type="text" name="newPassword"/> </label></div>
-    <div><label> Confirm New Password: <input type="text" name="confirmNewPassword"/> </label></div>
+<form th:action ="@{/updatepassword}" method="post">
+    <div><label> Current Password: <input type="password" name="password"/> </label></div>
+    <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
+    <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
     <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
     <div><input type="submit" value="Confirm"/></div>
 </form>
 
 <h2>Delete Account</h2>
-<form th:action ="@{/login}" method="post">
+<form th:action ="@{/delete}" method="post">
     <div><label> Username: <input type="text" name="displayName"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
