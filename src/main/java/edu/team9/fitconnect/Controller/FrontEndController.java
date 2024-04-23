@@ -40,6 +40,11 @@ public class FrontEndController {
         model.addAttribute("loggedIn", principal != null);
     }
 
+    @GetMapping("/files/upload")
+    public String uploadFileScreen(){
+        return "main/uploadform";
+    }
+
     @PostMapping(value = "/account")
     public String updateUsername(@RequestParam String displayName, @RequestParam String confirmDisplayName, Principal principal){
         if(displayName.equals(confirmDisplayName)){
