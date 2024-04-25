@@ -1,5 +1,6 @@
 package edu.team9.fitconnect.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,8 @@ import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -20,6 +23,7 @@ public class User implements UserDetails {
     @PrimaryKey
     private String email;
     private String firstName;
+    private String lastName;
     private String displayname;
     private int weight;
     private int heightInInches;
@@ -28,6 +32,34 @@ public class User implements UserDetails {
 
     boolean isEnabled;
     boolean isLocked;
+
+    LocalDateTime dateJoined;
+
+    // profile picture
+    @JsonIgnore
+    private ByteBuffer pfpData;
+    private String pfpFileType;
+    private String fileName;
+
+    public User(String displayname, String firstName, String lastName, String email, int weight, int height, String password, Role role, boolean isEnabled, boolean isLocked) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.displayname = displayname;
+        this.weight = weight;
+        this.heightInInches = height;
+        this.password = password;
+        this.role = role;
+        this.isLocked = isLocked;
+        this.isEnabled = isEnabled;
+        dateJoined = LocalDateTime.now();
+    }
+
+    public void setProfilePhoto(ByteBuffer pfpData, String pfpFileType, String fileName){
+        this.pfpData = pfpData;
+        this.pfpFileType = pfpFileType;
+        this.fileName = fileName;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

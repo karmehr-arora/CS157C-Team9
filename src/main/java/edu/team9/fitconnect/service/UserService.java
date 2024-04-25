@@ -22,15 +22,15 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public void createUser(String firstName, String username, String email, String password, int weight, int height, User.Role role){
+    public void createUser(String firstName, String lastName, String username, String email, String password, int weight, int height, User.Role role){
         // Encode password!
         String encodedPass = bCryptPasswordEncoder().encode(password);
-        User newUser = new User(username, firstName, email, weight, height, encodedPass, role, true, false);
+        User newUser = new User(username, firstName, lastName, email, weight, height, encodedPass, role, true, false);
 
         userRepository.save(newUser);
 
-        userRepository.findAll()
-                .forEach(v -> System.out.println(v.getFirstName()));
+//        userRepository.findAll()
+//                .forEach(v -> System.out.println(v.getFirstName()));
     }
 
 
@@ -48,9 +48,12 @@ public class UserService implements UserDetailsService {
 
     public void deleteAccount(String email){
         User user = (User)loadUserByUsername(email);
-
+        //todo: this may end up being more complicated if there are other objects that depend on the user
     }
 
+    public void saveUser(User user){
+        userRepository.save(user);
+    }
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByEmail(email);

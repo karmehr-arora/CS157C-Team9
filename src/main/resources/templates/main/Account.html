@@ -28,6 +28,14 @@
     <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
     <div><input type="submit" value="Confirm"/></div>
 </form>
+
+<h2>Profile Picture</h2>
+<form method="POST" enctype="multipart/form-data" th:action="@{/files/profilepicture/upload}">
+    <table>
+        <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+        <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+    </table>
+</form>
 </body>
 </html>
 
