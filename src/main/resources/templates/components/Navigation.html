@@ -21,12 +21,20 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            User Settings
+                            Account
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul th:if="${loggedIn}" class="dropdown-menu">
                             <li><a class="dropdown-item" href="/account">Account</a></li>
                             <li><a class="dropdown-item" href="/notifications">Notifications</a></li>
-                            <li><a class="dropdown-item" href="/login">Logout</a></li>
+                            <li class="dropdown-item">
+                                <form th:action="@{/logout}" method="post" class="mb-0">
+                                    <button type="submit" class="btn btn-link p-0 text-black text-decoration-none">Logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                        <ul th:unless="${loggedIn}" class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/signUp">Sign Up</a></li>
+                            <li><a class="dropdown-item" href="/login">Log In</a></li>
                         </ul>
                     </li>
                 </ul>
