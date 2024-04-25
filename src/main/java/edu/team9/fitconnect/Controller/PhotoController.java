@@ -89,4 +89,14 @@ public class PhotoController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
         }
     }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteFile(@PathVariable("id") UUID id){
+        try{
+            photoService.deletePhotoById(id);
+            return ResponseEntity.ok().body("Photo deleted");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+        }
+    }
 }

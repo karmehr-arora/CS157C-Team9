@@ -30,4 +30,8 @@ public class PhotoService {
     public List<Photo> getPhotosByUser(String username) {
         return photoRepository.findPhotosByUserId(username);
     }
+
+    public void deletePhotoById(UUID id){
+        photoRepository.deleteById(id);
+    }
 }
