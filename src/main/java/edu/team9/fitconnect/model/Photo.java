@@ -1,5 +1,7 @@
 package edu.team9.fitconnect.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -13,17 +15,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table("progress_photo")
+@AllArgsConstructor
 public class Photo {
     @PrimaryKey
     private UUID id;
 
     private String fileName;
-
+    @JsonIgnore
     private ByteBuffer fileData;
+
+    private String fileType;
 
     private LocalDateTime created;
 
-    private String description;
+    private int weight;
 
     private String userId;
 
