@@ -3,6 +3,7 @@ package edu.team9.fitconnect.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.UUID;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Table

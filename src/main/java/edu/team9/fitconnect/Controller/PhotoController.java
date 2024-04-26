@@ -55,7 +55,7 @@ public class PhotoController {
         }
     }
 
-    @PostMapping("/profilepicture/upload")
+    @PostMapping("/profilephoto/upload")
     public ResponseEntity<String> uploadPFP(@RequestParam("file") MultipartFile file, Principal principal) {
         try{
             //Find user signed in
@@ -67,7 +67,7 @@ public class PhotoController {
                         photoService.uploadFile(file.getOriginalFilename(), file.getBytes(), signedInUser, file.getContentType());
                         signedInUser.setProfilePhoto(ByteBuffer.wrap(file.getBytes()), file.getContentType(), file.getOriginalFilename());
                         userService.saveUser(signedInUser);
-                        return ResponseEntity.ok("ProfilePicture successfully.");
+                        return ResponseEntity.ok("Profile updated successfully.");
                     }else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid file type.");
                     }

@@ -1,0 +1,5 @@
+.profile-photo-nav{
+    width:32px;
+    aspect-ratio: 1 /1;
+    object-fit: cover;
+}
