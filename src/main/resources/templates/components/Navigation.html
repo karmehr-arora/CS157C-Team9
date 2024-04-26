@@ -23,8 +23,8 @@
                         <a class="nav-link" href="/challenges">Challenges</a>
                     </li>
                     <li class="nav-item dropdown d-flex justify-content-center">
-                        <a th:if="${loggedIn}" class="ms-2 nav-link p-0 dropdown-toggle d-flex justify-content-center align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="https://i1.rgstatic.net/ii/profile.image/273591375757347-1442240676074_Q512/Ching-Seh-mike-Wu.jpg" class="rounded-circle" style="width:32px;" />
+                        <a th:if="${loggedIn}" class="nav-link p-0 dropdown-toggle d-flex justify-content-center align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="rounded-circle profile-photo-nav"/>
                             <p th:text="${user.getFirstName()}" class="ms-2 fw-bold mb-1"></p>
                         </a>
                         <a th:unless="${loggedIn}" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -55,6 +55,33 @@ public class PhotoController {
         }
     }
 
+    @PostMapping("/profilephoto/upload")
+    public ResponseEntity<String> uploadPFP(@RequestParam("file") MultipartFile file, Principal principal) {
+        try{
+            //Find user signed in
+            if(principal != null){
+                String username = principal.getName();
+                User signedInUser = (User) userService.loadUserByUsername(username);
+                try {
+                    if(isImageFile(file.getContentType())){
+                        photoService.uploadFile(file.getOriginalFilename(), file.getBytes(), signedInUser, file.getContentType());
+                        signedInUser.setProfilePhoto(ByteBuffer.wrap(file.getBytes()), file.getContentType(), file.getOriginalFilename());
+                        userService.saveUser(signedInUser);
+                        return ResponseEntity.ok("Profile updated successfully.");
+                    }else {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid file type.");
+                    }
+                } catch (IOException e) {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+                }
+            }else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
+            }
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
+        }
+    }
+
     @GetMapping("/all")
     public ResponseEntity<?> getPhotosByUser(Principal principal){
         try{
@@ -84,6 +111,25 @@ public class PhotoController {
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(photo.getFileType()))
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= \"" + photo.getFileName() + "\"")
+                    .body(bytes);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+        }
+    }
+
+    @GetMapping("/profilephoto/{email}")
+    public ResponseEntity<?> getPFP(@PathVariable("email") String email){
+        try{
+            User user = (User) userService.loadUserByUsername(email);
+
+            ByteBuffer imageData = user.getPfpData();
+
+            // Convert ByteBuffer to byte array
+            byte[] bytes = new byte[imageData.remaining()];
+            imageData.get(bytes);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(user.getPfpFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= \"" + user.getFileName() + "\"")
                     .body(bytes);
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
