@@ -2,6 +2,19 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
+
+<div class="container mt-3">
+    <div class="p-4 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
+        <div>
+            <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
+        </div>
+        <div class="ms-3">
+            <h1 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
+            <h4 class="fw-bold" th:text="'Member since ' + ${user.getDateJoined()}"></h4>
+        </div>
+    </div>
+</div>
+
 <h1>Account Settings</h1>
 <p th:text="${name}"></p>
 <!--<button type="button" class="btn btn-danger">Danger</button>-->
