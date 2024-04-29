@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Progress</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+<head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
-<div class="container">
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-12">
+
+        </div>
+        <div class="col-lg-8 col-12">
+
+        </div>
+    </div>
     <h1>My Progress</h1>
 
     <div class="actions-container">

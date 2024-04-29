@@ -14,14 +14,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@Table
+@Table("weight")
 public class UserWeight {
     @JsonIgnore
     @PrimaryKey
     private UUID id;
 
     @JsonIgnore
-    @Indexed
     private String email;
 
     private double weight; // in LB
