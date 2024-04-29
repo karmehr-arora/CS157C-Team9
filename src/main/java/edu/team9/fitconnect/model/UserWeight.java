@@ -1,5 +1,7 @@
 package edu.team9.fitconnect.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.cassandra.core.mapping.Indexed;
@@ -11,12 +13,16 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Table("user_weight")
+@AllArgsConstructor
+@Table
 public class UserWeight {
+    @JsonIgnore
     @PrimaryKey
     private UUID id;
+
+    @JsonIgnore
     @Indexed
-    private String user_email;
+    private String email;
 
     private double weight; // in LB
     private LocalDateTime timestamp;
