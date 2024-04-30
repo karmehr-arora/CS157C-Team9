@@ -3,16 +3,63 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
-<div class="container-fluid">
+<div class="container">
+    <h1>My Progress</h1>
     <div class="row">
         <div class="col-lg-4 col-12">
-
+            <div class="py-3 px-1 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
+                <div>
+                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                        <h4>Enter new weight</h4>
+                        <p class="m-0">Current: 100lb</p>
+                    </div>
+                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                        <h4>Enter new measurements</h4>
+                        <p class="m-0">Last entry: 3/1/2024</p>
+                    </div>
+                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                        <h4>Upload profile photo</h4>
+                        <p class="m-0">Last entry: 2/2/2024</p>
+                    </div>
+                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                        <h4>Set weight goal</h4>
+                        <p class="m-0">Currently 130lb</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-lg-8 col-12">
-
+            <div class="p-3 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
+                <canvas id="weight-chart"></canvas>
+            </div>
         </div>
     </div>
-    <h1>My Progress</h1>
+
+    <h2 class="mt-4">My Progress Photos</h2>
+    <div class="overflow-x-auto d-flex flex-row">
+        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
+            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
+            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
+        </div>
+        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
+            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
+            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
+        </div>
+        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
+            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
+            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
+        </div>
+        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
+            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
+            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
+        </div>
+        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
+            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
+            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
+        </div>
+    </div>
+    <a class="fw-bold text-secondary">View Specific Photo</a>
+
 
     <div class="actions-container">
         <h2>Actions</h2>
@@ -54,5 +101,8 @@
     </div>
 </div>
 <script src="script.js"></script>
+<script>
+    // script to get all photos and render them here
+</script>
 </body>
 </html>
