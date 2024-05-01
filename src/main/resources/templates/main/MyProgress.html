@@ -12,19 +12,19 @@
                 <div>
                     <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#weightModal">
                         <h4>Enter new weight</h4>
-                        <p class="m-0" id="current-weight"></p>
-                    </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2">
-                        <h4>Enter new measurements</h4>
-                        <p class="m-0">Last entry: 3/1/2024</p>
+                        <p class="m-0" id="current-weight">Current weight unknown</p>
                     </div>
                     <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#photoModal">
                         <h4>Upload progress photo</h4>
-                        <p class="m-0">Last entry: 2/2/2024</p>
+                        <p class="m-0" id="progress-photo-label">Last entry: never</p>
                     </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2">
+                    <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#weightGoalModal">
                         <h4>Set weight goal</h4>
-                        <p class="m-0">Currently 130lb</p>
+                        <p class="m-0" id="goal-weight-label">No goal set</p>
+                    </div>
+                    <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#tableModal">
+                        <h4>See Chart as Table</h4>
+                        <p class="m-0" id="entry-counter"></p>
                     </div>
                 </div>
             </div>
@@ -94,6 +94,27 @@
     </div>
 </div>
 
+<div class="modal fade" id="weightGoalModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/user/change-goal}" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Edit Goal Weight</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="goalInput">Goal Weight (in lbs)</label>
+                    <input type="number" step="0.1" id="goalInput" class="form-control" name="weight" placeholder="Enter weight" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
@@ -118,19 +139,37 @@
     </div>
 </div>
 
+<div class="modal fade" id="tableModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">View Weight as Table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="weight-table">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
+    let user;
     // script to get all photos and render them here
     function refresh(){
         const photoFetch = fetch("/files/all")
         const weightFetch = fetch("/weight/all")
-        Promise.all([photoFetch, weightFetch])
+        const userInfoFetch = fetch("/user/me")
+        Promise.all([photoFetch, weightFetch, userInfoFetch])
             .then(responses => {
-                return Promise.all([responses[0], responses[1]]);
+                return Promise.all([responses[0], responses[1], responses[2]]);
             })
             .then(data => {
-                return Promise.all([data[0].json(), data[1].json()]);
+                return Promise.all([data[0].json(), data[1].json(), data[2].json()]);
             })
             .then(data => {
+                user = data[2];
                 renderWeight(sortByCreatedAsc(data[1]));
                 renderPhotos(sortByCreatedDesc(data[0]));
             })
@@ -151,21 +190,51 @@
         let html = "";
         pics.forEach(photo => {
             html+= `
-            <div class="bg-secondary-subtle m-2 rounded p-0" style="min-width: 300px;max-width: 500px">
-                <img class="img-fluid progress-photo rounded" alt="progress-photo" src="/files/view/${photo.id}"/>
+            <div class="bg-secondary-subtle m-2 rounded p-0" style="min-width: 200px;max-width: 400px">
+                <img class="progress-photo rounded" alt="progress-photo" src="/files/view/${photo.id}"/>
                 <p class="fw-bold mx-3 mt-2 text-center">${formatDate(photo.created)} | ${photo.weight} lb</p>
             </div>
             `;
         });
         document.querySelector("#photo-container").innerHTML = html;
+
+        if(pics.length > 0){
+            document.querySelector("#progress-photo-label").textContent = "Last photo was taken " + formatDate(pics[0].created);
+        }
     }
     function renderWeight(weights){
-        document.querySelector("#current-weight").textContent = "Current Weight: " + weights[weights.length-1].weight + " lbs on " + formatDate(weights[weights.length-1].created);
+        document.querySelector("#entry-counter").textContent = "Number of entries: " + weights.length;
+        document.querySelector("#goal-weight-label").textContent = "Current Goal: " + user.goalWeight;
+        if(weights.length > 0){
+            document.querySelector("#current-weight").textContent = "Current Weight: " + weights[weights.length-1].weight + " lbs on " + formatDate(weights[weights.length-1].created);
+        }
+
+        let tableContent = `
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Measurement Date</th>
+                    <th scope="col">Weight (in LB)</th>
+                    <th scope="col">Distance to goal (in LB)</th>
+                </tr>
+                </thead>
+                <tbody>`;
 
         let dataset = [];
         weights.forEach(weight => {
             dataset.push({x: new Date(weight.created), y: weight.weight});
+            tableContent += `
+                <tr>
+                    <th>${formatDate(weight.created)}</th>
+                    <td>${weight.weight}</td>
+                    <td>${weight.weight - user.goalWeight}</td>
+                </tr>
+            `;
         });
+
+        tableContent += `</tbody></table>`;
+        document.querySelector("#weight-table").innerHTML = tableContent;
+
 
         let chart = document.querySelector("#weight-chart");
         let renderedChart = new Chart(chart, {
@@ -177,25 +246,31 @@
                 }]
             },
             options: {
-                legend: {
-                    display: false
-                },
-                plugins: {
-                    legend: {
-                        display: false,
-                    },
-                    title: {
-                        display: false,
-                        text: 'Weight'
-                    },
-                },
                 scales: {
                     x: {
                         type: 'time',
-                        time:{
+                        time: {
                             unit: 'day',
-                        }
-                    }
+                        },
+                    },
+                },
+                plugins: {
+                    annotation: {
+                        annotations: [
+                            {
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'y', // Use 'y' for the y-axis
+                                value: user.goalWeight, // Set the value where you want the line
+                                borderColor: 'red', // Customize the line color
+                                borderWidth: 2, // Customize the line width
+                                label: {
+                                    content: 'Goal Weight', // Optional label text
+                                    enabled: true, // Show the label
+                                },
+                            },
+                        ],
+                    },
                 },
             }
         });

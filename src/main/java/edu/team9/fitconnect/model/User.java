@@ -31,6 +31,7 @@ public class User implements UserDetails {
     private int heightInInches;
     private String password;
     private Role role;
+    private double goalWeight;
 
     boolean isEnabled;
     boolean isLocked;
@@ -55,6 +56,7 @@ public class User implements UserDetails {
         this.isLocked = isLocked;
         this.isEnabled = isEnabled;
         dateJoined = LocalDateTime.now();
+        goalWeight = 0;
     }
 
     public void setProfilePhoto(ByteBuffer pfpData, String pfpFileType, String fileName){
