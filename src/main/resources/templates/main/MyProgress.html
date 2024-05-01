@@ -9,7 +9,7 @@
         <div class="col-lg-4 col-12">
             <div class="p-3 rounded bg-dark-subtle" style="height:100%">
                 <div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2">
+                    <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#weightModal">
                         <h4>Enter new weight</h4>
                         <p class="m-0">Current: 100lb</p>
                     </div>
@@ -61,17 +61,6 @@
         </div>
     </div>
 
-    <div id="weightModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Enter Your New Weight</h2>
-            <form id="weightForm">
-                <input type="text" id="weightInput" placeholder="Enter your weight">
-                <button class="fancy-button" type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
-
 
     <div class="chart-container">
         <!-- chart here -->
@@ -83,19 +72,46 @@
     </div>
 </div>
 <script src="script.js"></script>
+
+
+
+<div class="modal fade" id="weightModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/weight/add}" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add new weight measurement</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="weightInput">Weight (in lbs)</label>
+                    <input type="number" step="0.1" id="weightInput" class="form-control" name="weight" placeholder="Enter weight" required>
+                    <p>Note: current date and time will be used</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     // script to get all photos and render them here
     function refresh(){
         const photoFetch = fetch("/files/all")
-        Promise.all([photoFetch])
+        const weightFetch = fetch("/weight/all")
+        Promise.all([photoFetch, weightFetch])
             .then(responses => {
-                return Promise.all([responses[0]]);
+                return Promise.all([responses[0], responses[1]]);
             })
             .then(data => {
-                return Promise.all([data[0].json()]);
+                return Promise.all([data[0].json(), data[1].json()]);
             })
             .then(data => {
-                renderPhotos(data[0]);
+                renderWeight(sortByCreatedAsc(data[1]));
+                renderPhotos(sortByCreatedDesc(data[0]));
             })
             .catch((response)=>{
                 console.log(response);
@@ -116,19 +132,14 @@
             html+= `
             <div class="bg-secondary-subtle m-2 rounded p-0" style="min-width: 300px;max-width: 500px">
                 <img class="img-fluid progress-photo rounded" alt="progress-photo" src="/files/view/${photo.id}"/>
-                <p class="fw-bold mx-3 mt-2 text-center">${photo.created} | ${photo.weight}</p>
+                <p class="fw-bold mx-3 mt-2 text-center">${formatDate(photo.created)} | ${photo.weight} lb</p>
             </div>
             `;
         });
         document.querySelector("#photo-container").innerHTML = html;
     }
-
-    function checkStatus(response){
-        if(response.ok){
-            return Promise.resolve(response);
-        }else{
-            return Promise.reject(response);
-        }
+    function renderWeight(weights){
+        document.querySelector("#weight-chart")
     }
 </script>
 </body>

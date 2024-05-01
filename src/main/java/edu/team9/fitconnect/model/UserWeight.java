@@ -24,5 +24,5 @@ public class UserWeight {
     private String email;
 
     private double weight; // in LB
-    private LocalDateTime timestamp;
+    private LocalDateTime created;
 }
