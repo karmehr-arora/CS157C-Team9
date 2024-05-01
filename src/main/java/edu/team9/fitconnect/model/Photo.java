@@ -28,7 +28,7 @@ public class Photo {
 
     private LocalDateTime created;
 
-    private int weight;
+    private double weight;
 
     private String userId;
 

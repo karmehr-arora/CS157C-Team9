@@ -30,6 +30,10 @@ public class WeightService {
         Optional<User> fetchedUser = userRepository.findByEmail(email);
 
         if(fetchedUser.isPresent()) {
+            User user = fetchedUser.get();
+            user.setWeight(w);
+            userRepository.save(user);
+
             UserWeight weight = new UserWeight(UUID.randomUUID(), email, w, LocalDateTime.now());
             weightRepository.save(weight);
         }else{

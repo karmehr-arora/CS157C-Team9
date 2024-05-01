@@ -18,8 +18,8 @@
                         <h4>Enter new measurements</h4>
                         <p class="m-0">Last entry: 3/1/2024</p>
                     </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2">
-                        <h4>Upload profile photo</h4>
+                    <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#photoModal">
+                        <h4>Upload progress photo</h4>
                         <p class="m-0">Last entry: 2/2/2024</p>
                     </div>
                     <div class="bg-secondary-subtle my-2 rounded p-2">
@@ -94,6 +94,30 @@
     </div>
 </div>
 
+<div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form th:action="@{/files/upload}" method="post" enctype="multipart/form-data">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Upload new progress photo</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Progress photo</label>
+                        <input class="form-control" name="file" type="file" id="formFile" accept="image/*">
+                    </div>
+                    <p>Note: Current weight and time will be used</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     // script to get all photos and render them here
     function refresh(){
@@ -143,8 +167,6 @@
             dataset.push({x: new Date(weight.created), y: weight.weight});
         });
 
-        dataset.push({x: new Date("6/1/2024"), y: 33});
-        console.log(dataset);
         let chart = document.querySelector("#weight-chart");
         let renderedChart = new Chart(chart, {
             type:'line',

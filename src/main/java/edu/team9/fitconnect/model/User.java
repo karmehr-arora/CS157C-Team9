@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String displayname;
-    private int weight;
+    private double weight;
     private int heightInInches;
     private String password;
     private Role role;
