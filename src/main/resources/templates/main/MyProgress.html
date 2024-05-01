@@ -8,10 +8,11 @@
     <div class="row">
         <div class="col-lg-4 col-12">
             <div class="p-3 rounded bg-dark-subtle" style="height:100%">
+                <h4 class="text-center fw-bold">Actions</h4>
                 <div>
                     <div class="bg-secondary-subtle my-2 rounded p-2" role="button" data-bs-toggle="modal" data-bs-target="#weightModal">
                         <h4>Enter new weight</h4>
-                        <p class="m-0">Current: 100lb</p>
+                        <p class="m-0" id="current-weight"></p>
                     </div>
                     <div class="bg-secondary-subtle my-2 rounded p-2">
                         <h4>Enter new measurements</h4>
@@ -29,19 +30,15 @@
             </div>
         </div>
         <div class="col-lg-8 col-12" style="height:100%">
-            <div class="p-3 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
+            <div class="p-3 rounded bg-dark-subtle">
+                <h4 class="text-center fw-bold">Weight Measurements</h4>
                 <canvas id="weight-chart"></canvas>
             </div>
         </div>
     </div>
 
     <h2 class="mt-4">My Progress Photos</h2>
-    <div class="overflow-x-auto d-flex flex-row" id="photo-container">
-
-
-    </div>
-    <a class="fw-bold text-secondary">View Specific Photo</a>
-
+    <div class="overflow-x-auto d-flex flex-row" id="photo-container"></div>
 
     <div class="actions-container">
         <h2>Actions</h2>
@@ -139,7 +136,47 @@
         document.querySelector("#photo-container").innerHTML = html;
     }
     function renderWeight(weights){
-        document.querySelector("#weight-chart")
+        document.querySelector("#current-weight").textContent = "Current Weight: " + weights[weights.length-1].weight + " lbs on " + formatDate(weights[weights.length-1].created);
+
+        let dataset = [];
+        weights.forEach(weight => {
+            dataset.push({x: new Date(weight.created), y: weight.weight});
+        });
+
+        dataset.push({x: new Date("6/1/2024"), y: 33});
+        console.log(dataset);
+        let chart = document.querySelector("#weight-chart");
+        let renderedChart = new Chart(chart, {
+            type:'line',
+            data:{
+                datasets: [{
+                    label: "Weight (in lb)",
+                    data: dataset
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    title: {
+                        display: false,
+                        text: 'Weight'
+                    },
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time:{
+                            unit: 'day',
+                        }
+                    }
+                },
+            }
+        });
     }
 </script>
 </body>
