@@ -7,28 +7,28 @@
     <h1>My Progress</h1>
     <div class="row">
         <div class="col-lg-4 col-12">
-            <div class="py-3 px-1 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
+            <div class="p-3 rounded bg-dark-subtle" style="height:100%">
                 <div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                    <div class="bg-secondary-subtle my-2 rounded p-2">
                         <h4>Enter new weight</h4>
                         <p class="m-0">Current: 100lb</p>
                     </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                    <div class="bg-secondary-subtle my-2 rounded p-2">
                         <h4>Enter new measurements</h4>
                         <p class="m-0">Last entry: 3/1/2024</p>
                     </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                    <div class="bg-secondary-subtle my-2 rounded p-2">
                         <h4>Upload profile photo</h4>
                         <p class="m-0">Last entry: 2/2/2024</p>
                     </div>
-                    <div class="bg-secondary-subtle my-2 rounded p-2 w-100">
+                    <div class="bg-secondary-subtle my-2 rounded p-2">
                         <h4>Set weight goal</h4>
                         <p class="m-0">Currently 130lb</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 col-12">
+        <div class="col-lg-8 col-12" style="height:100%">
             <div class="p-3 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
                 <canvas id="weight-chart"></canvas>
             </div>
@@ -36,27 +36,9 @@
     </div>
 
     <h2 class="mt-4">My Progress Photos</h2>
-    <div class="overflow-x-auto d-flex flex-row">
-        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
-            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
-            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
-        </div>
-        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
-            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
-            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
-        </div>
-        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
-            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
-            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
-        </div>
-        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
-            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
-            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
-        </div>
-        <div class="bg-secondary-subtle m-2 rounded p-0" style="width: 300px;">
-            <img class="img-fluid progress-photo rounded" alt="progress-photo" th:src="@{'/files/profilephoto/' + ${user.getEmail()}}"/>
-            <p class="fw-bold mx-3 mt-2 text-center">4/7/5765</p>
-        </div>
+    <div class="overflow-x-auto d-flex flex-row" id="photo-container">
+
+
     </div>
     <a class="fw-bold text-secondary">View Specific Photo</a>
 
@@ -103,6 +85,51 @@
 <script src="script.js"></script>
 <script>
     // script to get all photos and render them here
+    function refresh(){
+        const photoFetch = fetch("/files/all")
+        Promise.all([photoFetch])
+            .then(responses => {
+                return Promise.all([responses[0]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json()]);
+            })
+            .then(data => {
+                renderPhotos(data[0]);
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+    refresh();
+
+    function renderPhotos(pics){
+        let html = "";
+        pics.forEach(photo => {
+            html+= `
+            <div class="bg-secondary-subtle m-2 rounded p-0" style="min-width: 300px;max-width: 500px">
+                <img class="img-fluid progress-photo rounded" alt="progress-photo" src="/files/view/${photo.id}"/>
+                <p class="fw-bold mx-3 mt-2 text-center">${photo.created} | ${photo.weight}</p>
+            </div>
+            `;
+        });
+        document.querySelector("#photo-container").innerHTML = html;
+    }
+
+    function checkStatus(response){
+        if(response.ok){
+            return Promise.resolve(response);
+        }else{
+            return Promise.reject(response);
+        }
+    }
 </script>
 </body>
 </html>

@@ -18,7 +18,7 @@
 <h1>Account Settings</h1>
 <p th:text="${name}"></p>
 <!--<button type="button" class="btn btn-danger">Danger</button>-->
-<h2 th:text="${user.getEmail()}">Update Display Name</h2>
+<h2>Update Display Name</h2>
 <form th:action ="@{/account}" method="post">
     <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
     <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
@@ -42,13 +42,18 @@
     <div><input type="submit" value="Confirm"/></div>
 </form>
 
-<h2>Profile Picture</h2>
-<form method="POST" enctype="multipart/form-data" th:action="@{/files/profilephoto/upload}">
-    <table>
-        <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-        <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
-    </table>
-</form>
+<div class="container mt-3">
+    <div class="p-4 rounded bg-dark-subtle">
+        <h2>Profile Picture</h2>
+        <form method="POST" enctype="multipart/form-data" th:action="@{/files/profilephoto/upload}">
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Upload an image file for your account here</label>
+                <input class="form-control" type="file" name="file" id="formFile">
+                <input class="btn btn-primary mt-3" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
 
