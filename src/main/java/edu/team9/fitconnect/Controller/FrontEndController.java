@@ -48,10 +48,9 @@ public class FrontEndController {
 
     @PostMapping(value = "/newaccount")
     public String createAccount(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String displayName, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam int weight, @RequestParam int heightInInches){
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         // if email doesn't already exist in the database, then do the following:
         if(password.equals(confirmPassword)){
-            userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, encoder.encode(password), null, null, User.Role.USER, weight);
+            userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, password, null, null, User.Role.USER, weight);
             return "main/login";
         }
         return "main/signup";
