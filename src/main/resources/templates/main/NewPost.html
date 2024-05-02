@@ -6,58 +6,50 @@
 <div class="row justify-content-center mt-3">
     <div class="col col-12 col-lg-6">
         <div class="px-4 py-3 rounded bg-dark-subtle">
-            <form>
-                <div class="mb-3">
-                    <label for="title">Post title</label>
-                    <input class="form-control form-control-lg" type="text" id="title" placeholder="New Post" name="title" required>
-                </div>
-                <div class="mb-3">
-                    <label for="formFileLg" class="form-label">Upload image</label>
-                    <input class="form-control form-control-lg" id="formFileLg" type="file" name="file">
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select class="form-select" id="category" name="category" required>
-                        <option selected>Select a category</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="body" class="form-label">Post body</label>
-                    <textarea class="form-control" id="body" rows="3" name="body" required></textarea>
-                </div>
-                <button class="btn btn-primary" onclick="submitPost()">Submit</button>
-            </form>
+            <div class="mb-3">
+                <label for="title">Post title</label>
+                <input class="form-control form-control-lg" type="text" id="title" placeholder="New Post" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="file-form" class="form-label">Upload image</label>
+                <input class="form-control form-control-lg" id="file-form" type="file" name="file">
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" required>
+                    <option selected>Select a category</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="body" class="form-label">Post body</label>
+                <textarea class="form-control" id="body" rows="3" name="body" required></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="submitPost()">Submit</button>
         </div>
     </div>
 </div>
 
 <script>
     function submitPost() {
-        let form = document.querySelector('form');
-        let formData = new FormData(form);
-
-        console.log(formData);
-
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "/post/add", true);
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    console.log("SUCCESS : ", xhr.responseText);
-                    // Handle success response here
-                } else {
-                    console.log("ERROR : ", xhr.status);
-                    // Handle error response here
-                }
-            }
-        };
-        xhr.send(formData);
+        console.log(getFormData());
+        postDataWithFile("/post/add", getFormData())
+            .then(result => {
+                console.log(result);
+            })
     }
 
+    function getFormData(){
+        const formData = new FormData();
+        formData.append('title', document.querySelector("#title").value);
+        formData.append('category', document.querySelector("#category").value);
+        formData.append('body', document.querySelector("#body").value);
+        formData.append('file', document.querySelector("#file-form").files[0]);
+
+        return formData;
+    }
 </script>
 </body>
 </html>

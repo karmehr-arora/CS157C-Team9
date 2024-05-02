@@ -43,3 +43,24 @@ function sortByCreatedDesc(objectsArray) {
     // Return the reversed sorted array
     return objectsArray;
 }
+
+function postDataWithFile(url, formData) {
+    // Retrieve the CSRF token from the meta tags
+    let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // Create the fetch request headers and include the CSRF token
+    let headers = new Headers();
+    headers.append(csrfHeader, csrfToken);
+
+    // Create the fetch options
+    let options = {
+        method: 'POST',
+        headers: headers,
+        body: formData
+    };
+
+    // Perform the fetch request
+    return fetch(url, options)
+        .then(checkStatus);
+}
