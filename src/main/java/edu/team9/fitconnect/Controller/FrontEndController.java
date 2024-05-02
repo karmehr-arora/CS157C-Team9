@@ -40,11 +40,6 @@ public class FrontEndController {
         model.addAttribute("loggedIn", principal != null);
     }
 
-    @GetMapping("/files/upload")
-    public String uploadFileScreen(){
-        return "main/uploadform";
-    }
-
     @PostMapping(value = "/account")
     public String updateUsername(@RequestParam String displayName, @RequestParam String confirmDisplayName, Principal principal){
         if(displayName.equals(confirmDisplayName)){
@@ -77,7 +72,17 @@ public class FrontEndController {
 
     @GetMapping("/login")
     public String getLogin() {
-        return "main/login";
+        return "main/Login";
+    }
+
+    @GetMapping("/connect")
+    public String getConnectHome() {
+        return "main/ConnectHome";
+    }
+
+    @GetMapping("/connect/new-post")
+    public String getPostMaker() {
+        return "main/NewPost";
     }
 
     @GetMapping("/")
