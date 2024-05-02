@@ -38,7 +38,7 @@
     </div>
 
     <h2 class="mt-4">My Progress Photos</h2>
-    <div class="overflow-x-auto d-flex flex-row" id="photo-container"></div>
+    <div class="overflow-x-auto" id="photo-container" style="white-space: nowrap"></div>
 
     <div class="actions-container">
         <h2>Actions</h2>
@@ -190,7 +190,7 @@
         let html = "";
         pics.forEach(photo => {
             html+= `
-            <div class="bg-secondary-subtle m-2 rounded p-0" style="min-width: 200px;max-width: 400px">
+            <div class="bg-secondary-subtle m-2 rounded p-0 d-inline-block" style="width:300px;">
                 <img class="progress-photo rounded" alt="progress-photo" src="/files/view/${photo.id}"/>
                 <p class="fw-bold mx-3 mt-2 text-center">${formatDate(photo.created)} | ${photo.weight} lb</p>
             </div>
