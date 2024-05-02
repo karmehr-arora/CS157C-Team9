@@ -1,8 +1,7 @@
 package edu.team9.fitconnect.Controller;
 
-import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
-import edu.team9.fitconnect.service.PostService;
+import edu.team9.fitconnect.repository.UserRepository;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
 public class FrontEndController {
     UserService userService;
-    PostService postService;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -43,6 +38,11 @@ public class FrontEndController {
 
         // User is logged in or out
         model.addAttribute("loggedIn", principal != null);
+    }
+
+    @GetMapping("/files/upload")
+    public String uploadFileScreen(){
+        return "main/uploadform";
     }
 
     @PostMapping(value = "/account")
@@ -77,61 +77,12 @@ public class FrontEndController {
 
     @GetMapping("/login")
     public String getLogin() {
-        return "main/Login";
-    }
-
-    @GetMapping("/connect")
-    public String getConnectHome() {
-        return "main/ConnectHome";
-    }
-
-    @GetMapping("/connect/new-post")
-    public String getPostMaker(Model model) {
-        model.addAttribute("title", "New Post");
-        model.addAttribute("isEdit", false);
-        model.addAttribute("post", new Post(null, "", null, "", LocalDateTime.now(), "", "", "", ""));
-        return "main/EditPost";
-    }
-
-    @GetMapping("/connect/edit-post/{id}")
-    public String getPostMaker(@PathVariable("id") String id, Principal principal, Model model) {
-        try{
-            // Check if ID is a valid UUID
-            UUID postId = UUID.fromString(id);
-
-            try{
-                // Get post if exists
-                Post post = postService.getPostById(postId);
-
-                if(getCurrentUser(principal).getEmail().equals(post.getUserId())){
-                    model.addAttribute("isEdit", true);
-                    model.addAttribute("title", "Edit Post");
-                    model.addAttribute("post", post);
-                    return "main/EditPost";
-                }else{
-                    //todo: error for invalid user
-                }
-            }catch (Exception e){
-                //todo: error for post not found
-            }
-        }catch(Exception e){
-            //todo: error for invalid id
-        }
-
-
-        return "main/EditPost";
+        return "main/login";
     }
 
     @GetMapping("/")
     public String getHome() {
         return "main/Home";
-    }
-
-    @GetMapping("/connect/category-feed/{category}")
-    public String getCategoryFeed(@PathVariable("category") String category, Model model) {
-        //todo: mehr make sur to query database to see if category exists before continuing
-        model.addAttribute("categoryName", category);
-        return "main/CategoryFeed";
     }
 
     @GetMapping("/create-user")
