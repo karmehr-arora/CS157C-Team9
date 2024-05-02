@@ -46,6 +46,17 @@ public class FrontEndController {
         return "main/uploadform";
     }
 
+    @PostMapping(value = "/newaccount")
+    public String createAccount(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String displayName, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam int weight, @RequestParam int heightInInches){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        // if email doesn't already exist in the database, then do the following:
+        if(password.equals(confirmPassword)){
+            userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, encoder.encode(password), null, null, User.Role.USER, weight);
+            return "main/login";
+        }
+        return "main/signup";
+    }
+
     @PostMapping(value = "/account")
     public String updateUsername(@RequestParam String displayName, @RequestParam String confirmDisplayName, Principal principal){
         if(displayName.equals(confirmDisplayName)){
@@ -81,6 +92,11 @@ public class FrontEndController {
         return "main/login";
     }
 
+    @GetMapping("/signup")
+    public String getSignUp() {
+        return "main/signup";
+    }
+
     @GetMapping("/")
     public String getHome() {
         return "main/Home";
@@ -88,7 +104,6 @@ public class FrontEndController {
 
     @GetMapping("/create-user")
     public String getHome(Model model){
-//      userService.createUser("Costi", "Khamis","costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);
         userService.createUser("costik@costik.com", LocalDateTime.now(), "Constantine", null, "Costi", 170, 67, "khamis", "1234", null, null, User.Role.USER, 160.0);
         model.addAttribute("name", "test");
         return "main/Home";
