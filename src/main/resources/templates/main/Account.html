@@ -14,34 +14,50 @@
         </div>
     </div>
 </div>
-
-<h1>Account Settings</h1>
+<div class="container mt-3">
+    <h1>Account Settings</h1>
+</div>
 <p th:text="${name}"></p>
 <!--<button type="button" class="btn btn-danger">Danger</button>-->
-<h2>Update Display Name</h2>
-<form th:action ="@{/account}" method="post">
-    <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
-    <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
-<h2>Update Password</h2>
-<form th:action ="@{/updatepassword}" method="post">
-    <div><label> Current Password: <input type="password" name="password"/> </label></div>
-    <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
-    <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
-    <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
-<h2>Delete Account</h2>
-<form th:action ="@{/delete}" method="post">
-    <div><label> Username: <input type="text" name="displayName"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
+<div class="container mt-3">
+    <div class="p-4 rounded bg-dark-subtle">
+        <h2>Update Display Name</h2>
+        <form th:action ="@{/account}" method="post">
+            <div class="mb-3">
+                <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
+                <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
+                <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container mt-3">
+    <div class="p-4 rounded bg-dark-subtle">
+        <h2>Update Password</h2>
+        <form th:action ="@{/updatepassword}" method="post">
+            <div class="mb-3">
+                <div><label> Current Password: <input type="password" name="password"/> </label></div>
+                <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
+                <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
+                <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
+                <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container mt-3">
+    <div class="p-4 rounded bg-dark-subtle">
+        <h2>Delete Account</h2>
+        <form th:action ="@{/delete}" method="post">
+            <div class="mb-3">
+                <div><label> Username: <input type="text" name="displayName"/> </label></div>
+                <div><label> Password: <input type="password" name="password"/> </label></div>
+                <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
+                <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
+            </div>
+    </form>
+    </div>
+</div>
 <div class="container mt-3">
     <div class="p-4 rounded bg-dark-subtle">
         <h2>Profile Picture</h2>
