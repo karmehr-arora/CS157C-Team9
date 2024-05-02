@@ -64,7 +64,6 @@ public class PhotoController {
                 User signedInUser = (User) userService.loadUserByUsername(username);
                 try {
                     if(isImageFile(file.getContentType())){
-                        photoService.uploadFile(file.getOriginalFilename(), file.getBytes(), signedInUser, file.getContentType());
                         signedInUser.setProfilePhoto(ByteBuffer.wrap(file.getBytes()), file.getContentType(), file.getOriginalFilename());
                         userService.saveUser(signedInUser);
                         return ResponseEntity.ok("Profile updated successfully.");
