@@ -5,19 +5,23 @@
 <h1>Sign Up</h1>
 <h3>Create your account here!</h3>
 <div th:if="${param.error}">
-    Account could not be created or an account with that email address already exists
+    <label style="color:red"> Account could not be created </label>
 </div>
-
 <form th:action="@{/newaccount}" method="post">
     <div><label> First Name: <input type="text" name="firstName"/> </label></div>
     <div><label> Last Name: <input type = "text" name="lastName"> </label></div>
 
     <div><label> Email: <input type="text" name="email"/> </label></div>
+    <div th:if="${param.email}">
+        <label style="color:red"> This email may already in use </label>
+    </div>
     <div><label> Display Name: <input type = "text" name="displayName"> </label></div>
 
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><label> Confirm Password: <input type="password" name="confirmPassword"/> </label></div>
-
+    <div th:if="${param.password}">
+        <label style="color:red"> The passwords may not match </label>
+    </div>
     <div><label> Weight: <input type="number" name="weight"/> </label></div>
     <div><label> Height (Inches): <input type = "number" name="heightInInches"> </label></div>
     <div><input type="submit" value="Create"/></div>
