@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Controller
 @AllArgsConstructor
@@ -87,7 +88,8 @@ public class FrontEndController {
 
     @GetMapping("/create-user")
     public String getHome(Model model){
-        userService.createUser("Costi", "Khamis","costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);
+//      userService.createUser("Costi", "Khamis","costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);
+        userService.createUser("costik@costik.com", LocalDateTime.now(), "Constantine", null, "Costi", 170, 67, "khamis", "1234", null, null, User.Role.USER, 160.0);
         model.addAttribute("name", "test");
         return "main/Home";
     }

@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,11 +24,10 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public void createUser(String firstName, String lastName, String username, String email, String password, int weight, int height, User.Role role){
+    public void createUser(String email, LocalDateTime datejoined, String displayname, String filename, String firstname, int goalweight, int heightininches, String lastname, String password, ByteBuffer pfpdata, String pfpfiletype, User.Role role, double weight){
         // Encode password!
         String encodedPass = bCryptPasswordEncoder().encode(password);
-        User newUser = new User(username, firstName, lastName, email, weight, height, encodedPass, role, true, false);
-
+        User newUser = new User(email, firstname, lastname, displayname, weight, heightininches, encodedPass, role, goalweight, true, false, datejoined, pfpdata, pfpfiletype, filename);
         userRepository.save(newUser);
 
 //        userRepository.findAll()
