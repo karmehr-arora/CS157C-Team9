@@ -28,12 +28,21 @@ public class PostService {
         return postRepository.findPostsByUserId(email);
     }
 
-    public void newPost(String email, String fileName, byte[] fileBytes, String contentType, String title, String body, String category) throws Exception{
+    public void savePost(String id, String email, String fileName, byte[] fileBytes, String contentType, String title, String body, String category) throws Exception{
         // make sure user exists first
         Optional<User> fetchedUser = userRepository.findByEmail(email);
 
+        UUID postId;
+        try{
+            // Edit
+            postId = UUID.fromString(id);
+        }catch (Exception e){
+            // New post
+            postId = UUID.randomUUID();
+        }
+
         if(fetchedUser.isPresent()) {
-            Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
+            Post newPost = new Post(postId, fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
             postRepository.save(newPost);
         }else{
             throw new Exception("user not found");

@@ -1,7 +1,9 @@
 package edu.team9.fitconnect.Controller;
 
+import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
 import edu.team9.fitconnect.repository.UserRepository;
+import edu.team9.fitconnect.service.PostService;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
@@ -81,7 +84,20 @@ public class FrontEndController {
     }
 
     @GetMapping("/connect/new-post")
-    public String getPostMaker() {
+    public String getPostMaker(Model model) {
+        model.addAttribute("id", "");
+        return "main/NewPost";
+    }
+
+    @GetMapping("/connect/edit-post/{id}")
+    public String getPostMaker(@PathVariable("id") UUID id, Principal principal) {
+        // Get post if exists
+        try{
+
+        }catch (Exception e){
+
+        }
+
         return "main/NewPost";
     }
 

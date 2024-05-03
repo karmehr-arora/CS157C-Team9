@@ -31,7 +31,7 @@ public class PostController {
     private UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> newPost(@RequestParam("file") MultipartFile file, @RequestParam("title") String title, @RequestParam("body") String body, @RequestParam("category") String category, Principal principal) {
+    public ResponseEntity<String> newPost(@RequestParam("file") MultipartFile file, @RequestParam("title") String title, @RequestParam("body") String body, @RequestParam("category") String category, @RequestParam("id") String id, Principal principal) {
         try{
             //Find user signed in
             if(principal != null){
@@ -39,7 +39,7 @@ public class PostController {
                 User signedInUser = (User) userService.loadUserByUsername(username);
                 try {
                     if(isImageFile(file.getContentType())){
-                        postService.newPost(signedInUser.getEmail(), file.getName(), file.getBytes(), file.getContentType(), title, body, category);
+                        postService.savePost(id, signedInUser.getEmail(), file.getName(), file.getBytes(), file.getContentType(), title, body, category);
                         return ResponseEntity.ok("Post uploaded successfully.");
                     }else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid file type.");
