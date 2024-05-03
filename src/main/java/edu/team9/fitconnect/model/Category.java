@@ -19,7 +19,6 @@ public class Category {
     private String topic;
 
     private LocalDateTime created;
-
     private String fileName;
     @JsonIgnore
     private ByteBuffer fileData;
