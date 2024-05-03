@@ -121,6 +121,6 @@ public class FrontEndController {
 
     @GetMapping("/workouts")
     public String getWorkouts() {
-        return "main/Workouts";
+        return "main/Workout";
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -15,9 +16,13 @@ public class WorkoutService {
     @Autowired
     private WorkoutRepository workoutRepository;
 
-    public void createWorkout(User user, String nameOfWorkout, int sets, int reps, double weight) {
-        Workout workout = new Workout(UUID.randomUUID(), user.getEmail(), nameOfWorkout, sets, reps, weight, LocalDateTime.now());
+    public void createWorkout(String email, String nameOfWorkout, int sets, int reps, double weight) {
+        Workout workout = new Workout(UUID.randomUUID(), email, nameOfWorkout, sets, reps, weight, LocalDateTime.now());
         workoutRepository.save(workout);
+    }
+
+    public List<Workout> getAllWorkouts() {
+        return workoutRepository.findAll();
     }
 
     public Workout getWorkoutById(UUID id) {

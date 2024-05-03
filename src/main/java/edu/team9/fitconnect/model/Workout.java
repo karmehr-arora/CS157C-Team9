@@ -7,6 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -20,6 +21,8 @@ public class Workout {
     private String userId;
 
     private String nameOfWorkout;
+
+    //private List<WorkoutSet> sets;
 
     private int sets;
 
