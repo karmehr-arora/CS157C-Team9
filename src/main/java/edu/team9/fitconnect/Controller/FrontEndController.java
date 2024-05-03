@@ -2,7 +2,6 @@ package edu.team9.fitconnect.Controller;
 
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
-import edu.team9.fitconnect.repository.UserRepository;
 import edu.team9.fitconnect.service.PostService;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
@@ -13,12 +12,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
 public class FrontEndController {
     UserService userService;
+    PostService postService;
+
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -85,20 +87,36 @@ public class FrontEndController {
 
     @GetMapping("/connect/new-post")
     public String getPostMaker(Model model) {
-        model.addAttribute("id", "");
-        return "main/NewPost";
+        model.addAttribute("post", new Post(null, "", null, "", LocalDateTime.now(), "", "", "", ""));
+        return "main/EditPost";
     }
 
     @GetMapping("/connect/edit-post/{id}")
-    public String getPostMaker(@PathVariable("id") UUID id, Principal principal) {
-        // Get post if exists
+    public String getPostMaker(@PathVariable("id") String id, Principal principal, Model model) {
         try{
+            // Check if ID is a valid UUID
+            UUID postId = UUID.fromString(id);
 
-        }catch (Exception e){
+            try{
+                // Get post if exists
+                Post post = postService.getPostById(postId);
 
+                if(getCurrentUser(principal).getEmail().equals(post.getUserId())){
+                    model.addAttribute("Title", "Edit Post");
+                    model.addAttribute("post", post);
+                    return "main/EditPost";
+                }else{
+                    //todo: error for invalid user
+                }
+            }catch (Exception e){
+                //todo: error for post not found
+            }
+        }catch(Exception e){
+            //todo: error for invalid id
         }
 
-        return "main/NewPost";
+
+        return "main/EditPost";
     }
 
     @GetMapping("/")
