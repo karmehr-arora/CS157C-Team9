@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{components/Header :: header('Fitconnect')}"></head>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<div class="container">
+    <h2>Workout</h2>
+    <form th:action="@{/workouts/create}" method="post" id="workoutForm">
+        <div class="form-group">
+            <label for="workoutSelect">Select Workout:</label>
+            <select class="form-control" id="workoutSelect" name="workoutSelect">
+                <option value="" selected disabled>Select a Workout</option>
+                <option th:each="workout : ${workouts}" th:value="${workout.id}" th:text="${workout.nameOfWorkout}"></option>
+                <option value="workout1">Bench</option>
+                <option value="workout2">Deadlift</option>
+                <option value="workout3">Squat</option>
+                <option value="custom">Custom Workout</option>
+            </select>
+        </div>
+
+        <table class="table" id="workoutTable">
+            <thead>
+            <tr>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td><input type="number" class="form-control" name="reps[]" required></td>
+                <td><input type="number" class="form-control" name="weight[]" required></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+
+        <button type="submit" class="btn btn-success">Create Workout</button>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    /* Function to add a new row to the table */
+    function addRow() {
+        var table = document.getElementById("workoutTable").getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.rows.length);
+
+        var setNumber = table.rows.length;
+        var cells = newRow.insertCell(0);
+        cells.appendChild(document.createTextNode(setNumber));
+
+        cells = newRow.insertCell(1);
+        var repsInput = document.createElement("input");
+        repsInput.setAttribute("type", "number");
+        repsInput.setAttribute("class", "form-control");
+        repsInput.setAttribute("name", "reps[]");
+        repsInput.required = true;
+        cells.appendChild(repsInput);
+
+        cells = newRow.insertCell(2);
+        var weightInput = document.createElement("input");
+        weightInput.setAttribute("type", "number");
+        weightInput.setAttribute("class", "form-control");
+        weightInput.setAttribute("name", "weight[]");
+        weightInput.required = true;
+        cells.appendChild(weightInput);
+
+        cells = newRow.insertCell(3);
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "X"; // 'X' icon for delete
+        deleteButton.setAttribute("type", "button");
+        deleteButton.setAttribute("class", "btn btn-danger");
+        deleteButton.onclick = function() {
+            // Remove the row when delete button is clicked
+            table.deleteRow(newRow.rowIndex-1);
+        };
+        cells.appendChild(deleteButton);
+    }
+</script>
+</body>
+</html>
