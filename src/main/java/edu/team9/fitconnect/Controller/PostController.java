@@ -31,21 +31,22 @@ public class PostController {
     private UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> newPost(@RequestParam("file") MultipartFile file, @RequestParam("title") String title, @RequestParam("body") String body, @RequestParam("category") String category, @RequestParam("id") String id, Principal principal) {
+    public ResponseEntity<String> savePost(@RequestParam(name ="file", required = false) MultipartFile file, @RequestParam("title") String title, @RequestParam("body") String body, @RequestParam("category") String category, @RequestParam("id") String id, Principal principal) {
         try{
             //Find user signed in
             if(principal != null){
                 String username = principal.getName();
                 User signedInUser = (User) userService.loadUserByUsername(username);
-                try {
-                    if(isImageFile(file.getContentType())){
+                try{
+                    if(file==null){
+                        postService.savePost(id, signedInUser.getEmail(), null, null, null, title, body, category);
+                    }else{
                         postService.savePost(id, signedInUser.getEmail(), file.getName(), file.getBytes(), file.getContentType(), title, body, category);
-                        return ResponseEntity.ok("Post uploaded successfully.");
-                    }else {
-                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid file type.");
                     }
-                } catch (IOException e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file.");
+
+                    return ResponseEntity.ok("Post uploaded successfully.");
+                }catch (Exception e){
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
                 }
             }else{
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");

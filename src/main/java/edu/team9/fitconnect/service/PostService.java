@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static edu.team9.fitconnect.Config.AllowedFileTypes.isImageFile;
+
 @Service
 public class PostService {
 
@@ -44,9 +46,13 @@ public class PostService {
             // Check if post exists
             Optional<Post> opPost = postRepository.findById(postId);
             if(opPost.isEmpty()){
-                // Post does not exist. Create one with the specified user
-                Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
-                postRepository.save(newPost);
+                if(isImageFile(contentType)){
+                    // Post does not exist. Create one with the specified user
+                    Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
+                    postRepository.save(newPost);
+                }else{
+                    throw new Exception("Image file required");
+                }
             }
 
             Post post = opPost.get();
@@ -55,18 +61,33 @@ public class PostService {
                 throw new Exception("Log into correct account to edit post");
             }
 
-            post.setBodyText(body);
-            post.setCategory(category);
-            post.setFileType(contentType);
-            post.setFileName(fileName);
-            post.setFileData(ByteBuffer.wrap(fileBytes));
-            post.setTitleText(title);
+            if(!body.isEmpty()){
+                post.setBodyText(body);
+            }
+
+            if(!category.isEmpty()){
+                post.setCategory(category);
+            }
+
+            if(fileBytes!=null && isImageFile(contentType)){
+                post.setFileType(contentType);
+                post.setFileName(fileName);
+                post.setFileData(ByteBuffer.wrap(fileBytes));
+            }
+
+            if(!title.isEmpty()){
+                post.setTitleText(title);
+            }
 
             postRepository.save(post);
         }catch (Exception e){
-            // Post does not exist. Create one with the specified user
-            Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
-            postRepository.save(newPost);
+            if(isImageFile(contentType)){
+                // Post does not exist. Create one with the specified user
+                Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
+                postRepository.save(newPost);
+            }else{
+                throw new Exception("Image file required");
+            }
         }
 
     }

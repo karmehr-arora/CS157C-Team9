@@ -88,6 +88,7 @@ public class FrontEndController {
     @GetMapping("/connect/new-post")
     public String getPostMaker(Model model) {
         model.addAttribute("title", "New Post");
+        model.addAttribute("isEdit", false);
         model.addAttribute("post", new Post(null, "", null, "", LocalDateTime.now(), "", "", "", ""));
         return "main/EditPost";
     }
@@ -103,6 +104,7 @@ public class FrontEndController {
                 Post post = postService.getPostById(postId);
 
                 if(getCurrentUser(principal).getEmail().equals(post.getUserId())){
+                    model.addAttribute("isEdit", true);
                     model.addAttribute("title", "Edit Post");
                     model.addAttribute("post", post);
                     return "main/EditPost";
