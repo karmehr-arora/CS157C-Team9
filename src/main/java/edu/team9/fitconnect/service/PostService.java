@@ -44,7 +44,9 @@ public class PostService {
             // Check if post exists
             Optional<Post> opPost = postRepository.findById(postId);
             if(opPost.isEmpty()){
-                throw new Exception("Post does not exist");
+                // Post does not exist. Create one with the specified user
+                Post newPost = new Post(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), email, title, body, category);
+                postRepository.save(newPost);
             }
 
             Post post = opPost.get();

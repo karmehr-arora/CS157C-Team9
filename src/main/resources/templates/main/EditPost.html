@@ -7,7 +7,7 @@
     <div class="col col-12 col-lg-6">
         <div class="px-4 py-3 rounded bg-dark-subtle">
             <div class="mb-3">
-                <label for="title">Post title</label>
+                <label for="title" th:text="${title}">Post title</label>
                 <input class="form-control form-control-lg" type="text" id="title" placeholder="New Post" name="title" required>
             </div>
             <div class="mb-3">
@@ -27,6 +27,7 @@
                 <label for="body" class="form-label">Post body</label>
                 <textarea class="form-control" id="body" rows="3" name="body" required></textarea>
             </div>
+            <input type="hidden" th:field="${post.id}" id="post-id" />
             <button class="btn btn-primary" onclick="submitPost()">Submit</button>
         </div>
     </div>
@@ -43,6 +44,7 @@
 
     function getFormData(){
         const formData = new FormData();
+        formData.append('id', document.querySelector("#post-id").value);
         formData.append('title', document.querySelector("#title").value);
         formData.append('category', document.querySelector("#category").value);
         formData.append('body', document.querySelector("#body").value);
