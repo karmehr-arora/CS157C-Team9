@@ -17,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Post {
     @PrimaryKey
-    @JsonIgnore
     private UUID id;
 
     private String fileName;

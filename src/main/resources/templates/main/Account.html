@@ -4,56 +4,123 @@
 <div th:replace="~{components/Navigation :: navbar}"></div>
 
 <div class="container mt-3">
-    <div class="p-4 rounded bg-dark-subtle d-flex justify-content-center align-items-center">
-        <div>
-            <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
-        </div>
-        <div class="ms-3">
-            <h1 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
-            <h4 class="fw-bold" th:text="'Member since ' + ${user.getDateJoined()}"></h4>
-        </div>
-    </div>
-</div>
-
-<h1>Account Settings</h1>
-<p th:text="${name}"></p>
-<!--<button type="button" class="btn btn-danger">Danger</button>-->
-<h2>Update Display Name</h2>
-<form th:action ="@{/account}" method="post">
-    <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
-    <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
-<h2>Update Password</h2>
-<form th:action ="@{/updatepassword}" method="post">
-    <div><label> Current Password: <input type="password" name="password"/> </label></div>
-    <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
-    <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
-    <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
-<h2>Delete Account</h2>
-<form th:action ="@{/delete}" method="post">
-    <div><label> Username: <input type="text" name="displayName"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
-    <div><input type="submit" value="Confirm"/></div>
-</form>
-
-<div class="container mt-3">
     <div class="p-4 rounded bg-dark-subtle">
-        <h2>Profile Picture</h2>
-        <form method="POST" enctype="multipart/form-data" th:action="@{/files/profilephoto/upload}">
-            <div class="mb-3">
-                <label for="formFile" class="form-label">Upload an image file for your account here</label>
-                <input class="form-control" type="file" name="file" id="formFile">
-                <input class="btn btn-primary mt-3" type="submit" value="Submit">
+        <div class="d-flex justify-content-center align-items-center">
+            <div>
+                <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
             </div>
-        </form>
+            <div class="ms-3">
+                <h1 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
+                <h4 class="fw-bold" th:text="'Member since ' + ${user.getDateJoined()}"></h4>
+            </div>
+        </div>
+        <div>
+            <ul class="nav nav-pills justify-content-center mt-2" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="settings-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Home</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="posts-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Your Posts</button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="settings-tab">
+        <h1>Account Settings</h1>
+        <p th:text="${name}"></p>
+        <!--<button type="button" class="btn btn-danger">Danger</button>-->
+        <h2>Update Display Name</h2>
+        <form th:action ="@{/account}" method="post">
+            <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
+            <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
+            <div><input type="submit" value="Confirm"/></div>
+        </form>
+
+        <h2>Update Password</h2>
+        <form th:action ="@{/updatepassword}" method="post">
+            <div><label> Current Password: <input type="password" name="password"/> </label></div>
+            <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
+            <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
+            <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
+            <div><input type="submit" value="Confirm"/></div>
+        </form>
+
+        <h2>Delete Account</h2>
+        <form th:action ="@{/delete}" method="post">
+            <div><label> Username: <input type="text" name="displayName"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
+            <div><input type="submit" value="Confirm"/></div>
+        </form>
+
+        <div class="container mt-3">
+            <div class="p-4 rounded bg-dark-subtle">
+                <h2>Profile Picture</h2>
+                <form method="POST" enctype="multipart/form-data" th:action="@{/files/profilephoto/upload}">
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Upload an image file for your account here</label>
+                        <input class="form-control" type="file" name="file" id="formFile">
+                        <input class="btn btn-primary mt-3" type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="posts-tab">
+        <div class="container">
+            <h1>Your Posts</h1>
+            <div id="post-container"></div>
+        </div>
+    </div>
+</div>
+<input type="hidden" th:field="${user.email}" id="user-email" />
+<script>
+    function refresh(){
+        const photoFetch = fetch("/post/user/" + document.querySelector("#user-email").value)
+        Promise.all([photoFetch])
+            .then(responses => {
+                return Promise.all([responses[0]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json()]);
+            })
+            .then(data => {
+                renderPosts(data[0]);
+                console.log(data[0]);
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+    refresh();
+
+    function renderPosts(postList){
+        let postContent = ``;
+        for(const post of postList){
+            postContent += `
+            <div class="p-4 rounded bg-dark-subtle float-start">
+                <img src="/post/photo/${post.id}" alt="post image" />
+                <div>
+                    <h3>${post.titleText}</h3>
+                    <p>${formatDate(post.created)}</p>
+                    <p>${post.bodyText}</p>
+                </div>
+
+            </div>
+            `;
+        }
+        document.querySelector("#post-container").innerHTML=postContent;
+    }
+</script>
 </body>
 </html>
 

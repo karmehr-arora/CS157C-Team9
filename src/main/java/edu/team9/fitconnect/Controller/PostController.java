@@ -61,8 +61,27 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostsByCategory(category));
     }
 
-    @GetMapping("/category/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<List<Post>> getPostsByUser(@PathVariable("username") String username){
         return ResponseEntity.ok(postService.getPostsByUser(username));
+    }
+
+    @GetMapping("/photo/{id}")
+    public ResponseEntity<?> getPFP(@PathVariable("id") String id){
+        try{
+            Post post = postService.getPostById(UUID.fromString(id));
+
+            ByteBuffer imageData = post.getFileData();
+
+            // Convert ByteBuffer to byte array
+            byte[] bytes = new byte[imageData.remaining()];
+            imageData.get(bytes);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(post.getFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= \"" + post.getFileName() + "\"")
+                    .body(bytes);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+        }
     }
 }
