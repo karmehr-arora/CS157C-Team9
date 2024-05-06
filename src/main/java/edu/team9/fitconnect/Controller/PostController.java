@@ -30,6 +30,14 @@ public class PostController {
     @Autowired
     private UserService userService;
 
+    private User getCurrentUser(Principal principal) {
+        if (principal == null) {
+            return new User("NULL", "NULL", "NULL", "Not Signed In", 0, 0, "", User.Role.USER, false, true);
+        }
+        String username = principal.getName();
+        return (User) userService.loadUserByUsername(username);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<String> savePost(@RequestParam(name ="file", required = false) MultipartFile file, @RequestParam("title") String title, @RequestParam("body") String body, @RequestParam("category") String category, @RequestParam("id") String id, Principal principal) {
         try{
@@ -53,6 +61,25 @@ public class PostController {
             }
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
+        }
+    }
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable("id") String id, Principal principal){
+        try{
+            postService.deletePost(UUID.fromString(id), getCurrentUser(principal));
+            return ResponseEntity.ok("Post deleted");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> getPost(@PathVariable("id") String id){
+        try{
+            return ResponseEntity.ok(postService.getPostById(UUID.fromString(id)));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         }
     }
 

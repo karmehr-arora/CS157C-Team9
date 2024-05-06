@@ -80,6 +80,26 @@
     </div>
 </div>
 <input type="hidden" th:field="${user.email}" id="user-email" />
+
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteConfirmationLabel">Delete Post</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="delete-post-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div id="dbc"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     function refresh(){
         const photoFetch = fetch("/post/user/" + document.querySelector("#user-email").value)
@@ -113,6 +133,7 @@
             postContent += `
             <div class="col-12 col-lg-4 h-100">
                 <div class="p-4 m-1 rounded bg-dark-subtle float-start">
+                    <p>Are you sure you would like to delete your post?</p>
                     <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
                     <div>
                         <h3 class="fw-bold">${post.titleText}</h3>
@@ -122,13 +143,51 @@
                     <div class="btn-group" role="group" aria-label="Basic example">
                         <button type="button" onclick="window.location.href='/connect/view/${post.id}'" class="btn btn-primary">View</button>
                         <button type="button" onclick="window.location.href='/connect/edit-post/${post.id}'" class="btn btn-primary">Edit</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <button type="button" onclick="setupDelete('${post.id}')" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmation" >Delete</button>
                     </div>
                 </div>
             </div>
             `;
         }
         document.querySelector("#post-container").innerHTML=postContent;
+    }
+
+    function setupDelete(id){
+        const getPost = fetch("/post/get/" + id)
+        Promise.all([getPost])
+            .then(responses => {
+                return Promise.all([responses[0]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json()]);
+            })
+            .then(data => {
+                let post = data[0];
+                document.querySelector("#delete-post-body").innerHTML = `
+                    <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
+                    <div>
+                        <h3 class="fw-bold">${post.titleText}</h3>
+                        <p>${formatDate(post.created)} | ${post.category}</p>
+                        <p>${post.bodyText}</p>
+                    </div>
+                `;
+
+                document.querySelector("#dbc").innerHTML = `
+                    <form action="/post/delete/${post.id}" method="post" class="mb-0">
+                        <button type="submit" class="btn btn-danger">Delete Post</button>
+                    </form>
+                `;
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
     }
 </script>
 </body>

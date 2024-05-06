@@ -114,6 +114,19 @@ public class PostService {
     public Post getPostById(UUID id) throws Exception{
         return postRepository.findById(id).orElseThrow();
     }
+
+    public void deletePost(UUID id, User user) throws Exception{
+        Optional<Post> post = postRepository.findById(id);
+        if(post.isPresent()){
+            if(user.getEmail().equals(post.get().getUserId())){
+                postRepository.deleteById(id);
+            }else{
+                throw new Exception("You must be on the correct account");
+            }
+        }else{
+            throw new Exception("Post not found");
+        }
+    }
     public List<Post> getPostsByCategory(String category){
         return postRepository.findPostsByCategory(category);
     }
