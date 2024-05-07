@@ -5,11 +5,7 @@
 <div th:replace="~{components/Navigation :: navbar}"></div>
 <div class="container">
     <h2>Workout</h2>
-<<<<<<< HEAD
     <form method="post" id="workoutForm">
-=======
-    <form th:action="@{/workouts/create}" method="post" id="workoutForm">
->>>>>>> origin/Workout-Tab
         <div class="form-group">
             <label for="workoutName">Select Workout:</label>
             <select class="form-control" id="workoutName" name="nameOfWorkout">
@@ -86,7 +82,6 @@
 
     /* Function to gather data and submit the form */
     function submitWorkout() {
-<<<<<<< HEAD
     var workoutName = document.getElementById("workoutName").value;
 
     var table = document.getElementById("workoutTable");
@@ -129,38 +124,6 @@
     }
 
 
-=======
-        var workoutName = document.getElementById("workoutName").value;
-
-        var table = document.getElementById("workoutTable");
-        var rows = table.getElementsByTagName('tr');
-        var workoutSets = [];
-
-        for (var i = 1; i < rows.length; i++) { // Start from index 1 to skip header row
-            var cells = rows[i].getElementsByTagName('td');
-            var setNumber = cells[0].textContent;
-            var reps = cells[1].querySelector('input').value;
-            console.log(reps);
-            var weight = cells[2].querySelector('input').value;
-            workoutSets.push({ setNumber: setNumber, reps: reps, weight: weight });
-        }
-
-        var data = { workoutName: workoutName, workoutSets: workoutSets };
-        console.log(JSON.stringify(data));
-
-        // Sending data to the server using AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/workouts/create", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(xhr.responseText);
-            }
-        };
-        xhr.send(JSON.stringify(data));
-    }
-
->>>>>>> origin/Workout-Tab
 
 
 </script>
