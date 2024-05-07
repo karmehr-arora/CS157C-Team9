@@ -4,6 +4,11 @@
     border-radius: 50%;
 }
 
+.category-icon{
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
 .progress-photo{
     aspect-ratio: 16 / 9;
     object-fit: cover;

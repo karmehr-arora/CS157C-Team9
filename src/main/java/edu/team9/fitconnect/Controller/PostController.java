@@ -1,5 +1,6 @@
 package edu.team9.fitconnect.Controller;
 
+import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Photo;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
@@ -84,8 +85,17 @@ public class PostController {
         }
     }
 
+    @GetMapping("/get-dto/{id}")
+    public ResponseEntity<?> getPostDTO(@PathVariable("id") String id){
+        try{
+            return ResponseEntity.ok(postService.getPostDTOById(UUID.fromString(id)));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
+        }
+    }
+
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable("category") String category){
+    public ResponseEntity<List<UserPostDTO>> getPostsByCategory(@PathVariable("category") String category){
         return ResponseEntity.ok(postService.getPostsByCategory(category));
     }
 

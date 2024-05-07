@@ -31,6 +31,12 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/user/{email}")
+    public ResponseEntity<User> all(@PathVariable("email") String email){
+        User user = (User) userService.loadUserByUsername(email);
+        return ResponseEntity.ok(user);
+    }
+
     @PostMapping("/change-goal")
     public ResponseEntity<String> changeGoal(@RequestParam double weight, Principal principal){
         try{

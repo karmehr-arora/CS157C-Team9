@@ -1,5 +1,6 @@
 package edu.team9.fitconnect.service;
 
+import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
 import edu.team9.fitconnect.model.UserWeight;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -115,6 +117,16 @@ public class PostService {
         return postRepository.findById(id).orElseThrow();
     }
 
+    public UserPostDTO getPostDTOById(UUID id) throws Exception{
+        Post post = postRepository.findById(id).orElseThrow();
+        try{
+            User user = userRepository.findByEmail(post.getUserId()).orElseThrow();
+            return new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName());
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     public void deletePost(UUID id, User user) throws Exception{
         Optional<Post> post = postRepository.findById(id);
         if(post.isPresent()){
@@ -127,7 +139,22 @@ public class PostService {
             throw new Exception("Post not found");
         }
     }
-    public List<Post> getPostsByCategory(String category){
-        return postRepository.findPostsByCategory(category);
+    public List<UserPostDTO> getPostsByCategory(String category){
+        List<Post> posts = postRepository.findPostsByCategory(category);
+        List<UserPostDTO> userPosts = new ArrayList<>();
+
+        // Table join workaround
+        posts.forEach((post) -> {
+            try{
+                User user = userRepository.findByEmail(post.getUserId()).orElseThrow();
+                userPosts.add(
+                        new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName())
+                );
+            }catch(Exception e){
+                //ignore
+            }
+        });
+
+        return userPosts;
     }
 }
