@@ -172,4 +172,9 @@ public class FrontEndController {
     public String getAccount() {
         return "main/Account";
     }
+
+    @GetMapping("/workouts")
+    public String getWorkouts() {
+        return "main/Workout";
+    }
 }

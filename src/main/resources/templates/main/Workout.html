@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{components/Header :: header('Fitconnect')}"></head>
+<style>
+    .split-tiles {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .split-tile {
+        width: 200px;
+        height: 200px;
+        perspective: 1000px;
+        position: relative;
+    }
+
+    .split-tile-inner {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+
+    .split-tile-front,
+    .split-tile-back {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        backface-visibility: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        text-align: center;
+        background-color: #f0f0f0;
+    }
+
+    .split-tile-back {
+        transform: rotateY(180deg);
+    }
+
+    .split-tile:hover .split-tile-inner {
+        transform: rotateY(180deg);
+    }
+
+    .split-tile h3,
+    .split-tile p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .split-details {
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        display: none;
+    }
+
+    .split-details.show {
+        display: block;
+    }
+</style>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<div class="container">
+<!--    <h2>User Workouts for the Day</h2>-->
+<!--    <ul id="workoutList">-->
+<!--        &lt;!&ndash; Workout data will be displayed here &ndash;&gt;-->
+<!--    </ul>-->
+    <h2>Workout</h2>
+    <form method="post" id="workoutForm">
+        <div class="form-group">
+            <label for="workoutName">Select Workout:</label>
+            <select class="form-control" id="workoutName" name="nameOfWorkout" onchange="checkCustom(this)">
+                <option value="" selected disabled>Select a Workout</option>
+                <option value="Bench Press">Bench Press</option>
+                <option value="Deadlift">Deadlift</option>
+                <option value="Squat">Squat</option>
+                <option value="Custom">Custom</option>
+                <!-- Add more common workouts as needed -->
+            </select>
+            <input type="text" class="form-control" id="customWorkout" name="customWorkout" style="display: none;" placeholder="Enter custom workout name">
+        </div>
+        <table class="table" id="workoutTable">
+            <thead>
+            <tr>
+                <th>Sets</th>
+                <th>Reps</th>
+                <th>Weight</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td><input type="number" class="form-control" name="reps[]" required></td>
+                <td><input type="number" class="form-control" name="weight[]" required></td>
+                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
+            </tr>
+            <!-- Additional rows will be added dynamically -->
+            </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+        <button type="button" class="btn btn-success" onclick="submitWorkout()">Create Workout</button>
+    </form>
+    <h3 style="margin-top: 20px;">Choose a Workout Split</h3>
+    <div class="split-tiles">
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Push Pull Legs')">
+                <div class="split-tile-front">
+                    <h3>Push Pull Legs</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>A popular workout split focusing on pushing exercises one day, pulling exercises the next, and legs on the third day.</p>
+                </div>
+            </div>
+        </div>
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Upper Lower')">
+                <div class="split-tile-front">
+                    <h3>Upper Lower</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>This split alternates between upper body and lower body workouts, typically done on different days.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Add more split tiles as needed -->
+    </div>
+
+    <div id="splitDetails" class="split-details">
+        <!-- Split details will be displayed here -->
+    </div>
+</div>
+
+<script>
+    /* Function to add a new row to the table */
+    function addRow() {
+        var table = document.getElementById("workoutTable").getElementsByTagName('tbody')[0];
+        var newRow = table.insertRow(table.rows.length);
+
+        var setNumber = table.rows.length;
+        var cells = newRow.insertCell(0);
+        cells.appendChild(document.createTextNode(setNumber));
+
+        cells = newRow.insertCell(1);
+        var repsInput = document.createElement("input");
+        repsInput.setAttribute("type", "number");
+        repsInput.setAttribute("class", "form-control");
+        repsInput.setAttribute("name", "reps[]");
+        repsInput.required = true;
+        cells.appendChild(repsInput);
+
+        cells = newRow.insertCell(2);
+        var weightInput = document.createElement("input");
+        weightInput.setAttribute("type", "number");
+        weightInput.setAttribute("class", "form-control");
+        weightInput.setAttribute("name", "weight[]");
+        weightInput.required = true;
+        cells.appendChild(weightInput);
+
+        cells = newRow.insertCell(3);
+        var deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "X"; // 'X' icon for delete
+        deleteButton.setAttribute("type", "button");
+        deleteButton.setAttribute("class", "btn btn-danger");
+        deleteButton.onclick = function() {
+            // Remove the row when delete button is clicked
+            table.deleteRow(newRow.rowIndex-1);
+        };
+        cells.appendChild(deleteButton);
+    }
+
+    /* Function to gather data and submit the form */
+    function submitWorkout() {
+        var workoutName = document.getElementById("workoutName").value;
+
+        if(workoutName === "Custom") {
+            workoutName = document.getElementById("customWorkout").value
+        }
+
+        var table = document.getElementById("workoutTable");
+        var rows = table.getElementsByTagName('tr');
+
+        for (var i = 1; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+            var currentSet = parseInt(cells[0].textContent);
+            var reps = parseInt(cells[1].querySelector('input').value);
+            var weight = parseInt(cells[2].querySelector('input').value);
+
+            var data = {
+                "workoutName": workoutName,
+                "currentSet": currentSet,
+                "reps": reps,
+                "weight": weight
+            };
+
+            console.log(JSON.stringify(data));
+
+            postData("/workouts/create", data)
+                .then(response => {
+                    console.log("Workout created successfully:", response);
+                })
+                .catch(error => {
+                    console.error("Error creating workout:", error);
+                });
+
+            alert("Workout created successfully!");
+        }
+    }
+
+    /* Function to check if custom workout option is selected */
+    function checkCustom(select) {
+        var customInput = document.getElementById("customWorkout");
+        if (select.value === "Custom") {
+            customInput.style.display = "block";
+            customInput.required = true;
+        } else {
+            customInput.style.display = "none";
+            customInput.required = false;
+        }
+    }
+
+    function showSplitDetails(splitName) {
+        var splitDetailsContainer = document.getElementById("splitDetails");
+        var splitDetails = getSplitDetails(splitName);
+
+        // Display split details in the container
+        splitDetailsContainer.innerHTML = `
+            <h2>${splitName}</h2>
+            <p>${splitDetails}</p>
+        `;
+
+        // Show the split details container
+        splitDetailsContainer.style.display = "block";
+    }
+
+    function getSplitDetails(splitName) {
+        // You can implement logic here to fetch split details from a database or hardcoded data
+        // For now, return some hardcoded details based on the split name
+        switch (splitName) {
+            case 'Push Pull Legs':
+                return "Day 1: Push exercises (e.g., bench press, shoulder press). Day 2: Pull exercises (e.g., pull-ups, rows). Day 3: Leg exercises (e.g., squats, deadlifts).";
+            case 'Upper Lower':
+                return "Day 1: Upper body exercises (e.g., chest, back, arms). Day 2: Lower body exercises (e.g., quads, hamstrings, calves).";
+            // Add more cases for additional split names
+            default:
+                return "No details available.";
+        }
+    }
+
+    function fetchUserWorkouts() {
+        fetch('/workouts/all')
+            .then(response => response.json())
+            .then(data => {
+                displayWorkouts(data);
+                console.log("Hello");
+            })
+            .catch(error => console.error('Error fetching workouts:', error));
+    }
+
+    // Function to display user workouts on the HTML page
+    function displayWorkouts(workouts) {
+        var workoutList = document.getElementById('workoutList');
+        workoutList.innerHTML = ''; // Clear previous content
+
+        if (workouts && workouts.length > 0) {
+            workouts.forEach(workout => {
+                var listItem = document.createElement('li');
+                listItem.textContent = workout.nameOfWorkout;
+                workoutList.appendChild(listItem);
+            });
+        } else {
+            var noWorkoutsMessage = document.createElement('p');
+            noWorkoutsMessage.textContent = 'No workouts available';
+            workoutList.appendChild(noWorkoutsMessage);
+        }
+    }
+
+    // Fetch user workouts when the page loads
+    window.onload = function() {
+        fetchUserWorkouts();
+    };
+
+
+
+
+</script>
+</body>
+</html>
