@@ -1,5 +1,6 @@
 package edu.team9.fitconnect.Controller;
 
+import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Photo;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
@@ -85,7 +86,7 @@ public class PostController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable("category") String category){
+    public ResponseEntity<List<UserPostDTO>> getPostsByCategory(@PathVariable("category") String category){
         return ResponseEntity.ok(postService.getPostsByCategory(category));
     }
 
