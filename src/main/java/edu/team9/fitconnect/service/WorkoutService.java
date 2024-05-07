@@ -20,11 +20,15 @@ public class WorkoutService {
         System.out.println("made it to service");
         Workout workout = new Workout(UUID.randomUUID(), email, nameOfWorkout, currentSet, reps, weight, LocalDateTime.now());
         workoutRepository.save(workout);
-        System.out.print("Workout saveed");
+        System.out.print("Workout saved");
     }
 
-    public List<Workout> getAllWorkouts() {
-        return workoutRepository.findAll();
+    public List<Workout> getAllWorkouts(String email) {
+        return workoutRepository.findAllByUserEmail(email);
+    }
+
+    public List<Workout> getAllWorkoutsByUserAndDate(String email, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return workoutRepository.findByUserEmailAndWorkoutDate(email, startDateTime, endDateTime);
     }
 
     public Workout getWorkoutById(UUID id) {

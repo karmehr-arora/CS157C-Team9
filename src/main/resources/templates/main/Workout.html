@@ -71,34 +71,10 @@
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
 <div class="container">
-    <h2>Choose a Workout Split</h2>
-    <div class="split-tiles">
-        <div class="split-tile">
-            <div class="split-tile-inner" onclick="showSplitDetails('Push Pull Legs')">
-                <div class="split-tile-front">
-                    <h3>Push Pull Legs</h3>
-                </div>
-                <div class="split-tile-back">
-                    <p>A popular workout split focusing on pushing exercises one day, pulling exercises the next, and legs on the third day.</p>
-                </div>
-            </div>
-        </div>
-        <div class="split-tile">
-            <div class="split-tile-inner" onclick="showSplitDetails('Upper Lower')">
-                <div class="split-tile-front">
-                    <h3>Upper Lower</h3>
-                </div>
-                <div class="split-tile-back">
-                    <p>This split alternates between upper body and lower body workouts, typically done on different days.</p>
-                </div>
-            </div>
-        </div>
-        <!-- Add more split tiles as needed -->
-    </div>
-
-    <div id="splitDetails" class="split-details">
-        <!-- Split details will be displayed here -->
-    </div>
+<!--    <h2>User Workouts for the Day</h2>-->
+<!--    <ul id="workoutList">-->
+<!--        &lt;!&ndash; Workout data will be displayed here &ndash;&gt;-->
+<!--    </ul>-->
     <h2>Workout</h2>
     <form method="post" id="workoutForm">
         <div class="form-group">
@@ -134,7 +110,34 @@
         <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
         <button type="button" class="btn btn-success" onclick="submitWorkout()">Create Workout</button>
     </form>
+    <h3 style="margin-top: 20px;">Choose a Workout Split</h3>
+    <div class="split-tiles">
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Push Pull Legs')">
+                <div class="split-tile-front">
+                    <h3>Push Pull Legs</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>A popular workout split focusing on pushing exercises one day, pulling exercises the next, and legs on the third day.</p>
+                </div>
+            </div>
+        </div>
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Upper Lower')">
+                <div class="split-tile-front">
+                    <h3>Upper Lower</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>This split alternates between upper body and lower body workouts, typically done on different days.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Add more split tiles as needed -->
+    </div>
 
+    <div id="splitDetails" class="split-details">
+        <!-- Split details will be displayed here -->
+    </div>
 </div>
 
 <script>
@@ -208,6 +211,8 @@
                 .catch(error => {
                     console.error("Error creating workout:", error);
                 });
+
+            alert("Workout created successfully!");
         }
     }
 
@@ -250,6 +255,39 @@
                 return "No details available.";
         }
     }
+
+    function fetchUserWorkouts() {
+        fetch('/workouts/all')
+            .then(response => response.json())
+            .then(data => {
+                displayWorkouts(data);
+                console.log("Hello");
+            })
+            .catch(error => console.error('Error fetching workouts:', error));
+    }
+
+    // Function to display user workouts on the HTML page
+    function displayWorkouts(workouts) {
+        var workoutList = document.getElementById('workoutList');
+        workoutList.innerHTML = ''; // Clear previous content
+
+        if (workouts && workouts.length > 0) {
+            workouts.forEach(workout => {
+                var listItem = document.createElement('li');
+                listItem.textContent = workout.nameOfWorkout;
+                workoutList.appendChild(listItem);
+            });
+        } else {
+            var noWorkoutsMessage = document.createElement('p');
+            noWorkoutsMessage.textContent = 'No workouts available';
+            workoutList.appendChild(noWorkoutsMessage);
+        }
+    }
+
+    // Fetch user workouts when the page loads
+    window.onload = function() {
+        fetchUserWorkouts();
+    };
 
 
 
