@@ -1,0 +1,89 @@
+<html>
+<head th:replace="~{components/Header :: header('Create Post')}"></head>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<h1 class="fw-bold text-center mt-2" th:text="${title}"></h1>
+<div class="row justify-content-center mt-3">
+    <div class="col col-12 col-lg-6">
+        <div class="my-3" id="status-message"></div>
+
+        <div class="px-4 py-3 rounded bg-dark-subtle">
+            <div class="mb-3">
+                <label for="title">Post title</label>
+                <input class="form-control form-control-lg" type="text" id="title" placeholder="New Post" name="title" th:value="${post.titleText}" th:required="${!isEdit}">
+            </div>
+            <div class="mb-3">
+                <label for="file-form" class="form-label">Upload image</label>
+                <input class="form-control form-control-lg" id="file-form" type="file" name="file" accept="image/*">
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select class="form-select" id="category" name="category" th:value="${post.category}" required>
+                    <option th:unless="${isEdit}" selected>Select a category</option>
+
+                    <option value="One" th:selected="${post.category == 'One'}">One</option>
+                    <option value="Two" th:selected="${post.category == 'Two'}">Two</option>
+                    <option value="Three" th:selected="${post.category == 'Three'}">Three</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="body" class="form-label">Post body</label>
+                <textarea class="form-control" id="body" rows="3" name="body" th:text="${post.getBodyText()}" required></textarea>
+            </div>
+            <input type="hidden" th:field="${post.id}" id="post-id" />
+            <button class="btn btn-primary" onclick="submitPost()">Submit</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function submitPost() {
+        console.log(getFormData());
+        postDataWithFile("/post/add", getFormData())
+            .then(result => {
+                let message = result.text();
+                console.log(message);
+                let messageContainer = document.querySelector("#status-message");
+                if(result.status === 200){
+                    // success
+                    messageContainer.innerHTML = `
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <strong>Success!</strong> Post was saved to FitConnect
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    `;
+                }else{
+                    // error
+                    messageContainer.innerHTML = `
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Posting error!</strong> ${message}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    `;
+                }
+            })
+            .catch(result => {
+                console.log(result);
+                // error
+                document.querySelector("#status-message").innerHTML = `
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Posting error!</strong> You should check in on some of those fields below.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                `;
+            })
+    }
+
+    function getFormData(){
+        const formData = new FormData();
+        formData.append('id', document.querySelector("#post-id").value);
+        formData.append('title', document.querySelector("#title").value);
+        formData.append('category', document.querySelector("#category").value);
+        formData.append('body', document.querySelector("#body").value);
+        formData.append('file', document.querySelector("#file-form").files[0]);
+
+        return formData;
+    }
+</script>
+</body>
+</html>

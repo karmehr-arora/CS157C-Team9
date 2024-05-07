@@ -1,0 +1,160 @@
+<html>
+<head th:replace="~{components/Header :: header('Conneeeect')}"></head>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<h1 class="text-center fw-bold" th:text="${categoryName}"></h1>
+<div class="container">
+    <div class="row">
+        <div class="col-3 d-none d-lg-block">
+            <h3 class="text-center fw-bold mb-3">All Categories</h3>
+            <div id="categories"></div>
+        </div>
+        <div class="col-12 col-lg-6" id="feed">
+
+        </div>
+        <div class="col-3 d-none d-lg-block">
+            <h3 class="text-center fw-bold mb-3">Your Profile</h3>
+            <div class="d-flex justify-content-center align-items-center">
+                <div>
+                    <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
+                </div>
+                <div class="ms-3">
+                    <h3 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h3>
+                    <h5 class="fw-bold" id="date-joined"></h5>
+                </div>
+            </div>
+            <div class="mt-2">
+                <button type="button" onclick="window.location.href='/connect/new-post'" class="btn btn-primary">+ New Post</button>
+                <button type="button" onclick="window.location.href='/account'" class="btn btn-primary">Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" th:value="${categoryName}" id="category-name" />
+
+<div class="modal fade" id="viewPost" tabindex="-1" aria-labelledby="viewPostLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 fw-bold" id="viewPostLabel">View Post</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="view-post-modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function refresh(){
+        const getPost = fetch("/post/category/" + document.querySelector("#category-name").value);
+        const getUser = fetch("/user/me");
+        Promise.all([getPost, getUser])
+            .then(responses => {
+                return Promise.all([responses[0], responses[1]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json(), data[1].json()]);
+            })
+            .then(data => {
+                renderPosts(data[0]);
+                renderUserInfo(data[1]);
+
+                //todo: temporary
+                let categories = ["One", "Two", "Tree"];
+                renderCategories(categories);
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+    refresh();
+
+    function renderPosts(postList){
+        let feedContent = ``;
+        postList.forEach(post => {
+            feedContent += `
+                <div class="mb-5 mx-5" onclick="renderPostPopup('${post.id}')" data-bs-toggle="modal" data-bs-target="#viewPost">
+                    <div class="d-flex flex-row mb-1 align-items-center">
+                        <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 mb-1 profile-photo" height="45"/>
+                        <div>
+                            <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
+                            <p class="mb-0">${formatDate(post.created)}</p>
+                        </div>
+                    </div>
+                    <img alt="profile image" class="progress-photo rounded" src="/post/photo/${post.id}" />
+                    <p>${post.bodyText}</p>
+                </div>
+            `;
+        });
+        document.querySelector("#feed").innerHTML = feedContent;
+    }
+
+    function renderUserInfo(userData){
+        document.querySelector("#date-joined").textContent = "Joined: "+formatDate(userData.dateJoined);
+    }
+
+    function renderCategories(categories){
+        let categoryContent = ``;
+        categories.forEach(category => {
+            categoryContent += `
+                <a class="rounded bg-dark-subtle d-flex align-items-center p-4 mb-2" href="/connect/category-feed/${category}">
+                    <img src="/files/category/${category}" alt="category icon" class="category-icon rounded me-3" height="40"/>
+                    <h4 class="fw-bold">${category}</h4>
+                </a>
+            `;
+        });
+        document.querySelector("#categories").innerHTML = categoryContent;
+    }
+
+    function renderPostPopup(id){
+        const getPost = fetch("/post/get-dto/" + id)
+        Promise.all([getPost])
+            .then(responses => {
+                return Promise.all([responses[0]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json()]);
+            })
+            .then(data => {
+                let post = data[0];
+                let modalContent = `
+                <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
+                <h2 class="fw-bold">${post.titleText}</h2>
+                <div class="d-flex flex-row my-3 pb-2 align-items-center border-bottom">
+                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="rounded me-2 mb-1 profile-photo" height="45"/>
+                    <div>
+                        <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
+                        <p class="mb-0">${formatDate(post.created)}</p>
+                    </div>
+                </div>
+                <p>${post.bodyText}</p>
+                `;
+
+
+                document.querySelector("#view-post-modal-body").innerHTML = modalContent;
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+</script>
+</body>
+</html>
