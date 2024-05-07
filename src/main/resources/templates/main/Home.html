@@ -2,8 +2,50 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
-<h1>Home</h1>
-<p th:text="${name}"></p>
+<div class="container my-5">
+    <div class="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+        <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
+            <h1 class="display-4 fw-bold lh-1 text-body-emphasis">FitConnect: Where Fitness meets Connections</h1>
+            <p class="lead">Introducing FitConnect, your ultimate fitness companion! It's a comprehensive web app supporting your fitness journey with weight tracking, goal setting, progress photos, and a supportive community for sharing achievements and experiences. Join FitConnect today and elevate your fitness journey!</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
+                <button type="button" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Sign Up</button>
+                <button type="button" class="btn btn-outline-secondary btn-lg px-4">Sign in</button>
+            </div>
+        </div>
+        <div class="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img class="rounded-lg-3" th:src="@{/Preview.png}" alt="" width="720">
+        </div>
+    </div>
+</div>
 
+<div class="container px-4 py-5" id="featured-3">
+    <h2 class="pb-2 border-bottom">FitConnect's Features</h2>
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+        <div class="feature col">
+            <p class="fs-1">📈</p>
+            <h3 class="fs-2 text-body-emphasis">Set Fitness Goals</h3>
+            <p>Set and achieve milestones with FitConnect's goal feature, keeping you focused and motivated on your fitness objectives. Stay on track and celebrate your progress as you reach new heights in your fitness journey.</p>
+            <a href="/myprogress">
+                My Progress >
+            </a>
+        </div>
+        <div class="feature col">
+            <p class="fs-1">🏋️‍♂️</p>
+            <h3 class="fs-2 text-body-emphasis">Track Workouts</h3>
+            <p>FitConnect's workout tracker empowers you to monitor your fitness routines with precision. Easily track reps, weight, and exercises performed, gaining valuable insights into your workout progress and optimizing your training for better results.</p>
+            <a href="/workouts" class="icon-link">
+                Workouts >
+            </a>
+        </div>
+        <div class="feature col">
+            <p class="fs-1">📷</p>
+            <h3 class="fs-2 text-body-emphasis">Connect with Others</h3>
+            <p>Connect with like-minded individuals in the FitConnect community, where you can share achievements, exchange tips, and support each other's fitness goals. Stay inspired and motivated as you journey towards a healthier lifestyle together.</p>
+            <a href="#" class="icon-link">
+                Connect >
+            </a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

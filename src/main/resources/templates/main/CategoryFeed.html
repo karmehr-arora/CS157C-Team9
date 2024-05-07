@@ -129,10 +129,10 @@
             .then(data => {
                 let post = data[0];
                 let modalContent = `
-                <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
+                <img src="/post/photo/${post.id}" class="progress-photo rounded" alt="post image" />
                 <h2 class="fw-bold">${post.titleText}</h2>
                 <div class="d-flex flex-row my-3 pb-2 align-items-center border-bottom">
-                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="rounded me-2 mb-1 profile-photo" height="45"/>
+                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 mb-1 profile-photo" height="45"/>
                     <div>
                         <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
                         <p class="mb-0">${formatDate(post.created)}</p>
