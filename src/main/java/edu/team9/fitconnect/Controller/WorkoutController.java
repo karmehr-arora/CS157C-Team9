@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/workouts")
@@ -26,12 +27,9 @@ public class WorkoutController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createWorkout(@RequestParam("nameOfWorkout") String nameOfWorkout,
-                                                @RequestParam("sets") int sets,
-                                                @RequestParam("reps") int reps,
-                                                @RequestParam("weight") double weight,
-                                                Principal principal) {
+    public ResponseEntity<String> createWorkout(@RequestBody Map<String, Object> requestBody) {
         try{
+            System.out.println("hello from controller");
             //workoutService.createWorkout(principal.getName(),nameOfWorkout, sets, reps, weight);
             return ResponseEntity.ok("Workout created successfully");
         }catch(Exception e){

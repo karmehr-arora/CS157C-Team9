@@ -37,7 +37,7 @@ public class WorkoutService {
 
     public void updateSets(UUID id, int sets) {
         Workout workout = workoutRepository.findById(id).orElseThrow(() -> new RuntimeException("Workout not found"));
-        workout.setSets(sets);
+        workout.setCurrentSet(sets);
         workoutRepository.save(workout);
     }
 

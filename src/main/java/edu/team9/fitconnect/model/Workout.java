@@ -22,9 +22,7 @@ public class Workout {
 
     private String nameOfWorkout;
 
-    //private List<WorkoutSet> sets;
-
-    private int sets;
+    private int currentSet;
 
     private int reps;
 
@@ -32,5 +30,10 @@ public class Workout {
 
     private LocalDateTime date;
 
+    public Workout(int currentSet, int reps, int weight) {
+        this.currentSet = currentSet;
+        this.reps = reps;
+        this.weight = weight;
+    }
 
 }
