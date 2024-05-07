@@ -127,6 +127,13 @@ public class FrontEndController {
         return "main/Home";
     }
 
+    @GetMapping("/connect/category-feed/{category}")
+    public String getCategoryFeed(@PathVariable("category") String category, Model model) {
+        //todo: mehr make sur to query database to see if category exists before continuing
+        model.addAttribute("categoryName", category);
+        return "main/CategoryFeed";
+    }
+
     @GetMapping("/create-user")
     public String getHome(Model model){
         userService.createUser("Costi", "Khamis","costik", "costik@costik.com", "1234", 0, 0, User.Role.USER);

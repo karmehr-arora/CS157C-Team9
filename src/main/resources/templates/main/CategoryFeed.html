@@ -1,0 +1,66 @@
+<html>
+<head th:replace="~{components/Header :: header('Conneeeect')}"></head>
+<body>
+<div th:replace="~{components/Navigation :: navbar}"></div>
+<h1 class="text-center fw-bold my-3" th:text="${categoryName}"></h1>
+<div class="container">
+    <div class="row">
+        <div class="col-2 d-none d-lg-block">
+            <h3 class="text-center fw-bold my-3">Other Categories</h3>
+        </div>
+        <div class="col-12 col-lg-7" id="feed">
+
+        </div>
+        <div class="col-3 d-none d-lg-block">
+            <h3 class="text-center fw-bold my-3">Your Profile</h3>
+            <div class="d-flex justify-content-center align-items-center">
+                <div>
+                    <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
+                </div>
+                <div class="ms-3">
+                    <h1 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
+                    <h4 class="fw-bold" th:text="'Member since ' + ${user.getDateJoined()}"></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" th:field="${categoryName}" id="category-name" />
+<script>
+    function refresh(){
+        const getPost = fetch("/post/category/" + document.querySelector("#category-name").value)
+        const getUser = fetch("/user/me")
+        Promise.all([getPost, getUser])
+            .then(responses => {
+                return Promise.all([responses[0], responses[1]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json(), data[1].json()]);
+            })
+            .then(data => {
+                renderPosts(data[0]);
+                renderUserInfo(data[1]);
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+    refresh();
+
+    function renderPosts(postList){
+
+    }
+
+    function renderUserInfo(userData){
+
+    }
+</script>
+</body>
+</html>
