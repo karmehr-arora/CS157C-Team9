@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +28,18 @@ public class WorkoutController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createWorkout(@RequestParam String workoutName,
-                                                @RequestParam int currentSet,
-                                                @RequestParam int reps,
-                                                @RequestParam int weight) {
+    public ResponseEntity<String> createWorkout(@RequestBody HashMap<String, String> workout, Principal principal ) {
         try{
-            System.out.println("hello from controller");
-            //workoutService.createWorkout(principal.getName(),nameOfWorkout, sets, reps, weight);
+            String workoutName = workout.get("workoutName");
+            System.out.println(workoutName);
+            int currentSet = Integer.parseInt(workout.get("currentSet"));
+            System.out.println(currentSet);
+            int reps = Integer.parseInt(workout.get("reps"));
+            System.out.println(reps);
+            double weight = Double.parseDouble(workout.get("weight"));
+            System.out.println(weight);
+            workoutService.createWorkout(principal.getName(),workoutName, currentSet, reps, weight);
+            System.out.println("Before response entity");
             return ResponseEntity.ok("Workout created successfully");
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e.toString());

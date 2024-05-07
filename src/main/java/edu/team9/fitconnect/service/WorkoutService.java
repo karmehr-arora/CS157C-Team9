@@ -16,9 +16,11 @@ public class WorkoutService {
     @Autowired
     private WorkoutRepository workoutRepository;
 
-    public void createWorkout(String email, String nameOfWorkout, int sets, int reps, double weight) {
-        Workout workout = new Workout(UUID.randomUUID(), email, nameOfWorkout, sets, reps, weight, LocalDateTime.now());
+    public void createWorkout(String email, String nameOfWorkout, int currentSet, int reps, double weight) {
+        System.out.println("made it to service");
+        Workout workout = new Workout(UUID.randomUUID(), email, nameOfWorkout, currentSet, reps, weight, LocalDateTime.now());
         workoutRepository.save(workout);
+        System.out.print("Workout saveed");
     }
 
     public List<Workout> getAllWorkouts() {
