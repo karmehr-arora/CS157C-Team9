@@ -5,7 +5,7 @@
 <div th:replace="~{components/Navigation :: navbar}"></div>
 <div class="container">
     <h2>Workout</h2>
-    <form th:action="@{/workouts/create}" method="post" id="workoutForm">
+    <form method="post" id="workoutForm">
         <div class="form-group">
             <label for="workoutName">Select Workout:</label>
             <select class="form-control" id="workoutName" name="nameOfWorkout">
@@ -82,35 +82,47 @@
 
     /* Function to gather data and submit the form */
     function submitWorkout() {
-        var workoutName = document.getElementById("workoutName").value;
+    var workoutName = document.getElementById("workoutName").value;
 
-        var table = document.getElementById("workoutTable");
-        var rows = table.getElementsByTagName('tr');
-        var workoutSets = [];
+    var table = document.getElementById("workoutTable");
+    var rows = table.getElementsByTagName('tr');
 
-        for (var i = 1; i < rows.length; i++) { // Start from index 1 to skip header row
-            var cells = rows[i].getElementsByTagName('td');
-            var setNumber = cells[0].textContent;
-            var reps = cells[1].querySelector('input').value;
-            console.log(reps);
-            var weight = cells[2].querySelector('input').value;
-            workoutSets.push({ setNumber: setNumber, reps: reps, weight: weight });
-        }
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName('td');
+        var currentSet = parseInt(cells[0].textContent);
+        var reps = parseInt(cells[1].querySelector('input').value);
+        var weight = parseInt(cells[2].querySelector('input').value);
 
-        var data = { workoutName: workoutName, workoutSets: workoutSets };
+        var data = {
+            "workoutName": workoutName,
+            "currentSet": currentSet,
+            "reps": reps,
+            "weight": weight
+        };
+
         console.log(JSON.stringify(data));
 
-        // Sending data to the server using AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/workouts/create", true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(xhr.responseText);
-            }
-        };
-        xhr.send(JSON.stringify(data));
+        postData("/workouts/create", data)
+            .then(response => {
+                console.log("Workout created successfully:", response);
+            })
+            .catch(error => {
+                console.error("Error creating workout:", error);
+            });
     }
+
+<!--        // Sending data to the server using AJAX-->
+<!--        var xhr = new XMLHttpRequest();-->
+<!--        xhr.open("POST", "/workouts/create", true);-->
+<!--        xhr.setRequestHeader("Content-Type", "application/json");-->
+<!--        xhr.onreadystatechange = function () {-->
+<!--            if (xhr.readyState === 4 && xhr.status === 200) {-->
+<!--                console.log(xhr.responseText);-->
+<!--            }-->
+<!--        };-->
+<!--        xhr.send(JSON.stringify(data));-->
+    }
+
 
 
 

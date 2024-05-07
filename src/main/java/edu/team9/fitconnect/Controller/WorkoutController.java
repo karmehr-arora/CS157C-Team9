@@ -27,7 +27,10 @@ public class WorkoutController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> createWorkout(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<String> createWorkout(@RequestParam String workoutName,
+                                                @RequestParam int currentSet,
+                                                @RequestParam int reps,
+                                                @RequestParam int weight) {
         try{
             System.out.println("hello from controller");
             //workoutService.createWorkout(principal.getName(),nameOfWorkout, sets, reps, weight);
@@ -37,12 +40,12 @@ public class WorkoutController {
         }
     }
 
-    @GetMapping("/workouts")
-    public String getWorkouts(Model model){
-        List<Workout> workouts = workoutService.getAllWorkouts();
-        model.addAttribute("workouts", workouts);
-        // Logging the contents of the list
-        return "main/workout";
-    }
+//    @GetMapping("/workouts")
+//    public String getWorkouts(Model model){
+//        List<Workout> workouts = workoutService.getAllWorkouts();
+//        model.addAttribute("workouts", workouts);
+//        // Logging the contents of the list
+//        return "main/workout";
+//    }
 
 }
