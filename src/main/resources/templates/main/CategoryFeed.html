@@ -85,8 +85,8 @@
         postList.forEach(post => {
             feedContent += `
                 <div class="mb-5 mx-5" onclick="renderPostPopup('${post.id}')" data-bs-toggle="modal" data-bs-target="#viewPost" role="button">
-                    <div class="d-flex flex-row mb-1 align-items-center">
-                        <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 mb-1 profile-photo" height="45"/>
+                    <div class="d-flex flex-row mb-2 align-items-center">
+                        <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 profile-photo" height="45"/>
                         <div>
                             <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
                             <p class="mb-0">${formatDate(post.created)}</p>
