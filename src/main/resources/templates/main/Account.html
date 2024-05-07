@@ -10,7 +10,7 @@
                 <img th:src="@{'/files/profilephoto/' + ${user.getEmail()}}" class="profile-photo" alt="profile photo" height="100px">
             </div>
             <div class="ms-3">
-                <h1 class="fw-bold" th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></h1>
+                <h1 class="fw-bold" th:text="${user.getDisplayname()}"></h1>
                 <h4 class="fw-bold" th:text="'Member since ' + ${user.getDateJoined()}"></h4>
             </div>
         </div>
