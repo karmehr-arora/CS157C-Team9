@@ -15,8 +15,8 @@ public class CategoryService {
     @Autowired
     private PostRepository postRepository;
 
-    public void insertCategory(String ctg, LocalDateTime time, String fileName, ByteBuffer data, String type){
-        Category category = new Category(ctg, time, fileName, data, type);
+    public void insertCategory(String ctg, String fileName, ByteBuffer data, String type){
+        Category category = new Category(ctg, LocalDateTime.now(), fileName, data, type);
         categoryRepository.save(category);
     }
 
