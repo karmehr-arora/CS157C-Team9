@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Category {
     @PrimaryKey
-    private String topic;
+    private String category;
 
     private LocalDateTime created;
     private String fileName;
