@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
         return new BCryptPasswordEncoder();
     }
 
-    public void createUser(String email, LocalDateTime datejoined, String displayname, String filename, String firstname, int goalweight, int heightininches, String lastname, String password, ByteBuffer pfpdata, String pfpfiletype, User.Role role, double weight){
+    public void createUser(String email, LocalDateTime datejoined, String displayname, String filename, String firstname, double goalweight, int heightininches, String lastname, String password, ByteBuffer pfpdata, String pfpfiletype, User.Role role, double weight){
         // Encode password!
         String encodedPass = bCryptPasswordEncoder().encode(password);
         User newUser = new User(email, firstname, lastname, displayname, weight, heightininches, encodedPass, role, goalweight, true, false, datejoined, pfpdata, pfpfiletype, filename);

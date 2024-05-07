@@ -2,9 +2,11 @@ package edu.team9.fitconnect.Controller;
 
 
 import edu.team9.fitconnect.service.CategoryService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +16,8 @@ import java.security.Principal;
 
 import static edu.team9.fitconnect.Config.AllowedFileTypes.isImageFile;
 
-
+@Controller
+@AllArgsConstructor
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
@@ -41,10 +44,5 @@ public class CategoryController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
         }
-    }
-
-    @GetMapping("/newUpload")
-    public String getConnectHome() {
-        return "main/ConnectHome";
     }
 }
