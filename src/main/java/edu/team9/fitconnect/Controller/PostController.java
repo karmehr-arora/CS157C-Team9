@@ -85,6 +85,15 @@ public class PostController {
         }
     }
 
+    @GetMapping("/get-dto/{id}")
+    public ResponseEntity<?> getPostDTO(@PathVariable("id") String id){
+        try{
+            return ResponseEntity.ok(postService.getPostDTOById(UUID.fromString(id)));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
+        }
+    }
+
     @GetMapping("/category/{category}")
     public ResponseEntity<List<UserPostDTO>> getPostsByCategory(@PathVariable("category") String category){
         return ResponseEntity.ok(postService.getPostsByCategory(category));

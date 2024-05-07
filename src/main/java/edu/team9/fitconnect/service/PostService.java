@@ -117,6 +117,16 @@ public class PostService {
         return postRepository.findById(id).orElseThrow();
     }
 
+    public UserPostDTO getPostDTOById(UUID id) throws Exception{
+        Post post = postRepository.findById(id).orElseThrow();
+        try{
+            User user = userRepository.findByEmail(post.getUserId()).orElseThrow();
+            return new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName());
+        }catch(Exception e){
+            throw e;
+        }
+    }
+
     public void deletePost(UUID id, User user) throws Exception{
         Optional<Post> post = postRepository.findById(id);
         if(post.isPresent()){
