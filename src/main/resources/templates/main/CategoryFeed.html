@@ -59,14 +59,14 @@
         postList.forEach(post => {
             feedContent += `
                 <div class="d-flex flex-row mb-1 mx-2 align-items-center">
-                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="profile-photo" height="50"/>
+                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 profile-photo" height="45"/>
                     <div>
                         <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
                         <p class="mb-0">${formatDate(post.created)}</p>
                     </div>
                 </div>
                 <img alt="profile image" class="progress-photo" src="/post/photo/${post.id}" />
-
+                <p>${post.bodyText}</p>
             `;
         });
         document.querySelector("#feed").innerHTML = feedContent;
