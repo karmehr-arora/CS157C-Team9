@@ -64,17 +64,18 @@ public class PostController {
         }
     }
 
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable("id") String id, Principal principal){
+    @PostMapping("/delete")
+    public ResponseEntity<?> deletePost(@RequestBody String id, Principal principal){
         try{
-            postService.deletePost(UUID.fromString(id), getCurrentUser(principal));
+            String truncatedId = id.substring(1, id.length()-1);
+            postService.deletePost(UUID.fromString(truncatedId), getCurrentUser(principal));
             return ResponseEntity.ok("Post deleted");
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> getPost(@PathVariable("id") String id){
         try{
             return ResponseEntity.ok(postService.getPostById(UUID.fromString(id)));

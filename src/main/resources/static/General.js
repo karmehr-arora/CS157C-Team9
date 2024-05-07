@@ -64,3 +64,26 @@ function postDataWithFile(url, formData) {
     return fetch(url, options)
         .then(checkStatus);
 }
+
+function postData(url, data) {
+    // Retrieve the CSRF token from the meta tags
+    let csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    let csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // Create the fetch request headers and include the CSRF token
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append(csrfHeader, csrfToken);
+
+    // Create the fetch options
+    let options = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(data)
+    };
+
+    // Perform the fetch request
+    return fetch(url, options)
+        .then(checkStatus)
+        .then(response => response.json());
+}

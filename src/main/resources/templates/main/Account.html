@@ -112,7 +112,6 @@
             })
             .then(data => {
                 renderPosts(data[0]);
-                console.log(data[0]);
             })
             .catch((response)=>{
                 console.log(response);
@@ -133,7 +132,6 @@
             postContent += `
             <div class="col-12 col-lg-4 h-100">
                 <div class="p-4 m-1 rounded bg-dark-subtle float-start">
-                    <p>Are you sure you would like to delete your post?</p>
                     <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
                     <div>
                         <h3 class="fw-bold">${post.titleText}</h3>
@@ -164,6 +162,7 @@
             .then(data => {
                 let post = data[0];
                 document.querySelector("#delete-post-body").innerHTML = `
+                    <p>Are you sure you would like to delete your post?</p>
                     <img src="/post/photo/${post.id}" class="progress-photo" alt="post image" />
                     <div>
                         <h3 class="fw-bold">${post.titleText}</h3>
@@ -173,9 +172,7 @@
                 `;
 
                 document.querySelector("#dbc").innerHTML = `
-                    <form action="/post/delete/${post.id}" method="post" class="mb-0">
-                        <button type="submit" class="btn btn-danger">Delete Post</button>
-                    </form>
+                    <button onclick="deletePost('${post.id}')" class="btn btn-danger" data-bs-dismiss="modal">Delete Post</button>
                 `;
             })
             .catch((response)=>{
@@ -188,6 +185,11 @@
                         console.error("Error parsing error response:", error);
                     });
             });
+    }
+
+    function deletePost(id){
+        postData("/post/delete", id)
+            .finally(response => {refresh()});
     }
 </script>
 </body>
