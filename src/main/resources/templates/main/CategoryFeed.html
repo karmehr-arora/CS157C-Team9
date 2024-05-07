@@ -58,8 +58,8 @@
         let feedContent = ``;
         postList.forEach(post => {
             feedContent += `
-                <div class="d-flex flex-row mb-3 align-items-center">
-                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="profile-photo" height="30"/>
+                <div class="d-flex flex-row mb-1 mx-2 align-items-center">
+                    <img src="/files/profilephoto/${post.email}" alt="profile image" class="profile-photo" height="50"/>
                     <div>
                         <p class="fw-bold mb-0">${post.firstName} ${post.lastName}</p>
                         <p class="mb-0">${formatDate(post.created)}</p>
