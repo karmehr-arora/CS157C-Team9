@@ -4,6 +4,7 @@ import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Photo;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
+import edu.team9.fitconnect.service.LikeService;
 import edu.team9.fitconnect.service.PhotoService;
 import edu.team9.fitconnect.service.PostService;
 import edu.team9.fitconnect.service.UserService;
@@ -30,6 +31,8 @@ public class PostController {
     private PostService postService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private LikeService likeService;
 
     private User getCurrentUser(Principal principal) {
         if (principal == null) {
@@ -62,6 +65,23 @@ public class PostController {
             }
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
+        }
+    }
+    @PostMapping("/like")
+    public ResponseEntity<String> likePost(@RequestParam UUID postId, Principal principal) {
+        // Get user
+        User user = getCurrentUser(principal);
+        if(!user.getEmail().equals("Not Signed In")){
+            // user signed in
+            try{
+                likeService.toggleLike(postId, user.getEmail());
+                return ResponseEntity.ok("Post liked.");
+            }catch (Exception e){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error liking post.");
+            }
+
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to like");
         }
     }
 
