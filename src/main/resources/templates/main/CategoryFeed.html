@@ -84,7 +84,7 @@
         let feedContent = ``;
         postList.forEach(post => {
             feedContent += `
-                <div class="mb-5 mx-5" onclick="renderPostPopup('${post.id}')" data-bs-toggle="modal" data-bs-target="#viewPost" role="button">
+                <div class="mb-2 mx-5" onclick="renderPostPopup('${post.id}')" data-bs-toggle="modal" data-bs-target="#viewPost" role="button">
                     <div class="d-flex flex-row mb-2 align-items-center">
                         <img src="/files/profilephoto/${post.email}" alt="profile image" class="me-2 profile-photo" height="45"/>
                         <div>
@@ -95,6 +95,11 @@
                     <img alt="profile image" class="progress-photo rounded" src="/post/photo/${post.id}" />
                     <p class="fw-bold mb-1">${post.titleText}</p>
                     <p>${post.bodyText}</p>
+                </div>
+                <div class="mx-5 mb-5">
+                    <div role="button" class="zoom-in" onclick="toggleLike('${post.id}')">
+                        <img ${post.liked ? 'src="/liked.png"' : 'src="/like.png"'}  alt="like" class="internal-zoom-in img-flluid w-100" />
+                    </div>
                 </div>
             `;
         });
@@ -123,6 +128,7 @@
             .catch((e) => console.log(e))
             .finally(() => {
                 renderPostPopup(postId);
+                refresh();
             });
     }
 

@@ -116,9 +116,9 @@ public class PostController {
     }
 
     @GetMapping("/get-dto/{id}")
-    public ResponseEntity<?> getPostDTO(@PathVariable("id") String id){
+    public ResponseEntity<?> getPostDTO(@PathVariable("id") String id, Principal principal){
         try{
-            return ResponseEntity.ok(postService.getPostDTOById(UUID.fromString(id)));
+            return ResponseEntity.ok(postService.getPostDTOById(UUID.fromString(id), principal.getName()));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         }

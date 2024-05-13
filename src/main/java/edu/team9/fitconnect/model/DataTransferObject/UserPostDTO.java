@@ -22,4 +22,5 @@ public class UserPostDTO {
     private String username;
     private String firstName;
     private String lastName;
+    private boolean isLiked;
 }

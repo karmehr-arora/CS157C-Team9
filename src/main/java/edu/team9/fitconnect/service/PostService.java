@@ -4,6 +4,7 @@ import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
 import edu.team9.fitconnect.model.UserWeight;
+import edu.team9.fitconnect.repository.LikeRepository;
 import edu.team9.fitconnect.repository.PostRepository;
 import edu.team9.fitconnect.repository.UserRepository;
 import edu.team9.fitconnect.repository.WeightRepository;
@@ -28,6 +29,9 @@ public class PostService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LikeRepository likeRepository;
 
     public List<Post> getPostsByUser(String email){
         return postRepository.findPostsByUserId(email);
@@ -117,11 +121,12 @@ public class PostService {
         return postRepository.findById(id).orElseThrow();
     }
 
-    public UserPostDTO getPostDTOById(UUID id) throws Exception{
+    public UserPostDTO getPostDTOById(UUID id, String email) throws Exception{
         Post post = postRepository.findById(id).orElseThrow();
+        boolean isLiked = likeRepository.findLikeByPostIdAndUserEmail(id, post.getUserId()).isPresent();
         try{
             User user = userRepository.findByEmail(post.getUserId()).orElseThrow();
-            return new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName());
+            return new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName(), isLiked);
         }catch(Exception e){
             throw e;
         }
@@ -147,8 +152,9 @@ public class PostService {
         posts.forEach((post) -> {
             try{
                 User user = userRepository.findByEmail(post.getUserId()).orElseThrow();
+                boolean isLiked = likeRepository.findLikeByPostIdAndUserEmail(post.getId(), post.getUserId()).isPresent();
                 userPosts.add(
-                        new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName())
+                        new UserPostDTO(post.getId(), user.getEmail(), post.getFileName(), post.getFileType(), post.getCreated(), post.getTitleText(), post.getBodyText(), post.getCategory(), user.getUsername(), user.getFirstName(), user.getLastName(), isLiked)
                 );
             }catch(Exception e){
                 //ignore
