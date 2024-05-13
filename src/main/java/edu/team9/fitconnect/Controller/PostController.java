@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,13 +69,13 @@ public class PostController {
         }
     }
     @PostMapping("/like")
-    public ResponseEntity<String> likePost(@RequestParam UUID postId, Principal principal) {
+    public ResponseEntity<String> likePost(@RequestBody HashMap<String, String> postId, Principal principal) {
         // Get user
         User user = getCurrentUser(principal);
         if(!user.getEmail().equals("Not Signed In")){
             // user signed in
             try{
-                likeService.toggleLike(postId, user.getEmail());
+                likeService.toggleLike(UUID.fromString(postId.get("postId")), user.getEmail());
                 return ResponseEntity.ok("Post liked.");
             }catch (Exception e){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error liking post.");
@@ -82,6 +83,15 @@ public class PostController {
 
         }else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to like");
+        }
+    }
+
+    @GetMapping("/isLiked/{id}")
+    public ResponseEntity<?> isLiked(@PathVariable("id") String id, Principal principal){
+        try{
+            return ResponseEntity.ok(likeService.getLike(UUID.fromString(id), principal.getName()));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
         }
     }
 

@@ -25,11 +25,16 @@ public class LikeService {
         Optional<Like> opLike = likeRepository.findLikeByPostIdAndUserEmail(post, email);
         if(opLike.isPresent()){
             // Like exists, delete like
-            likeRepository.deleteLikeByPostIdAndUserEmail(post, email);
+            likeRepository.deleteById(opLike.get().getLikeId());
         }else{
             // Create like on post
             likeRepository.save(new Like(UUID.randomUUID(), email, post));
         }
+    }
+
+    public boolean getLike(UUID id, String email){
+        Optional<Like> like = likeRepository.findLikeByPostIdAndUserEmail(id, email);
+        return (like.isPresent());
     }
 
     public List<Like> getLikes(UUID post){

@@ -13,7 +13,5 @@ public interface LikeRepository extends CassandraRepository<Like, UUID> {
     @AllowFiltering
     Optional<Like> findLikeByPostIdAndUserEmail(UUID postId, String userId);
     @AllowFiltering
-    void deleteLikeByPostIdAndUserEmail(UUID postId, String userId);
-    @AllowFiltering
     List<Like> findLikesByPostId(UUID postId);
 }

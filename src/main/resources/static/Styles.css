@@ -14,3 +14,24 @@
     object-fit: cover;
     width: 100%;
 }
+
+.zoom-in {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    position: relative;
+    width: 10%;
+    padding: .1rem;
+    transition: padding 0.3s ease;
+}
+
+.internal-zoom-in{
+    padding: .4rem;
+    transition: padding 0.2s ease;
+}
+.internal-zoom-in:hover{
+    padding:0;
+}
+
+.internal-zoom-in:active{
+    padding:.5rem;
+}

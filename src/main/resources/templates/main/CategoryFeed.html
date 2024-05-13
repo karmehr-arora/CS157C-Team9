@@ -118,17 +118,28 @@
         document.querySelector("#categories").innerHTML = categoryContent;
     }
 
+    function toggleLike(postId){
+        postData("/post/like", {"postId": postId})
+            .catch((e) => console.log(e))
+            .finally(() => {
+                renderPostPopup(postId);
+            });
+    }
+
     function renderPostPopup(id){
-        const getPost = fetch("/post/get-dto/" + id)
-        Promise.all([getPost])
+        const getPost = fetch("/post/get-dto/" + id);
+        const getPostLike = fetch("/post/isLiked/" + id);
+        Promise.all([getPost, getPostLike])
             .then(responses => {
-                return Promise.all([responses[0]]);
+                return Promise.all([responses[0], responses[1]]);
             })
             .then(data => {
-                return Promise.all([data[0].json()]);
+                return Promise.all([data[0].json(), data[1].json()]);
             })
             .then(data => {
                 let post = data[0];
+                let isLiked = data[1];
+                console.log(isLiked);
                 let modalContent = `
                 <img src="/post/photo/${post.id}" class="progress-photo rounded" alt="post image" />
                 <h2 class="fw-bold">${post.titleText}</h2>
@@ -140,6 +151,9 @@
                     </div>
                 </div>
                 <p>${post.bodyText}</p>
+                <div role="button" class="zoom-in" onclick="toggleLike('${post.id}')">
+                    <img ${isLiked ? 'src="/liked.png"' : 'src="/like.png"'}  alt="like" class="internal-zoom-in img-flluid w-100" />
+                </div>
                 `;
 
 
