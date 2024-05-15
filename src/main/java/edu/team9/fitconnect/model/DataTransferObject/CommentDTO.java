@@ -1,4 +1,4 @@
-package edu.team9.fitconnect.model;
+package edu.team9.fitconnect.model.DataTransferObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -13,12 +13,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@Table("comment")
-public class Comment {
+public class CommentDTO {
     @JsonIgnore
-    @PrimaryKey
     private UUID commentId;
     private String userEmail;
+    private String firstName;
+    private String lastName;
     private String comment;
     private UUID postId;
     private LocalDateTime timestamp;

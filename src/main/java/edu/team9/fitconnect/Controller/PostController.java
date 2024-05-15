@@ -4,10 +4,7 @@ import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Photo;
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
-import edu.team9.fitconnect.service.LikeService;
-import edu.team9.fitconnect.service.PhotoService;
-import edu.team9.fitconnect.service.PostService;
-import edu.team9.fitconnect.service.UserService;
+import edu.team9.fitconnect.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +31,8 @@ public class PostController {
     private UserService userService;
     @Autowired
     private LikeService likeService;
+    @Autowired
+    private CommentService commentService;
 
     private User getCurrentUser(Principal principal) {
         if (principal == null) {
@@ -112,6 +111,25 @@ public class PostController {
             return ResponseEntity.ok(postService.getPostById(UUID.fromString(id)));
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
+        }
+    }
+
+    @GetMapping("/get-comments/{id}")
+    public ResponseEntity<?> getPostComments(@PathVariable("id") String id){
+        try{
+            return ResponseEntity.ok(commentService.getCommentsForPost(UUID.fromString(id)));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Post not found");
+        }
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<?> createComment(@RequestBody HashMap<String, String> params, Principal principal){
+        try{
+            commentService.saveComment(principal.getName(), params.get("comment"), UUID.fromString(params.get("id")));
+            return ResponseEntity.ok("Comment saved");
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to create post");
         }
     }
 

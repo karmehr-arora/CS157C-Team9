@@ -135,20 +135,47 @@
             });
     }
 
+    function postComment(){
+        let data= {
+            id: document.querySelector("#post-id-form").value,
+            comment: document.querySelector("#comment-form").value
+        }
+        postData("/post/comment", data)
+            .catch((e) => console.log(e))
+            .finally(() => {
+                renderPostPopup(document.querySelector("#post-id-form").value);
+            });
+    }
+
     function renderPostPopup(id){
         const getPost = fetch("/post/get-dto/" + id);
         const getPostLike = fetch("/post/isLiked/" + id);
-        Promise.all([getPost, getPostLike])
+        const getComments = fetch("/post/get-comments/" + id);
+        Promise.all([getPost, getPostLike, getComments])
             .then(responses => {
-                return Promise.all([responses[0], responses[1]]);
+                return Promise.all([responses[0], responses[1], responses[2]]);
             })
             .then(data => {
-                return Promise.all([data[0].json(), data[1].json()]);
+                return Promise.all([data[0].json(), data[1].json(), data[2].json()]);
             })
             .then(data => {
                 let post = data[0];
                 let isLiked = data[1];
-                console.log(isLiked);
+
+                let commentContent = ``;
+                data[2].forEach(comment => {
+                    commentContent += `
+                    <div class="d-flex flex-row justify-content-start">
+                        <img src="/files/profilephoto/${comment.userEmail}" alt="profile image" class="me-2 mb-1 profile-photo" height="30"/>
+                        <div>
+                            <p class="fw-bold m-0">${comment.firstName} ${comment.lastName}</p>
+                            <p class="m-0">${comment.comment}</p>
+                            <p>${formatDate(comment.timestamp)}</p>
+                        </div>
+                    </div>
+                    `;
+                });
+
                 let modalContent = `
                 <img src="/post/photo/${post.id}" class="progress-photo rounded" alt="post image" />
                 <h2 class="fw-bold">${post.titleText}</h2>
@@ -160,12 +187,19 @@
                     </div>
                 </div>
                 <p>${post.bodyText}</p>
-                <div role="button" class="zoom-in" onclick="toggleLike('${post.id}')">
-                    <img ${isLiked ? 'src="/liked.png"' : 'src="/like.png"'}  alt="like" class="internal-zoom-in img-flluid w-100" />
+                <div class="d-flex">
+                    <div role="button" class="zoom-in" onclick="toggleLike('${post.id}')">
+                        <img ${isLiked ? 'src="/liked.png"' : 'src="/like.png"'}  alt="like" class="internal-zoom-in img-flluid w-100" />
+                    </div>
                 </div>
-                <div role="button" class="zoom-in" onclick="toggleLike('${post.id}')">
-                    <img src="/comment.png"  alt="like" class="internal-zoom-in img-flluid w-100" />
+                <hr />
+                ${commentContent}
+                <div class="input-group mt-3">
+                    <input type="hidden" id="post-id-form" value="${post.id}" />
+                    <input type="text" class="form-control" id="comment-form" placeholder="Recipient's username">
+                    <button class="btn btn-primary" type="button" id="comment-submit" onclick="postComment()">Comment</button>
                 </div>
+
                 `;
 
 
