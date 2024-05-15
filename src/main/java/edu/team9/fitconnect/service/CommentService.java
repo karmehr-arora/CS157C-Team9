@@ -2,10 +2,8 @@ package edu.team9.fitconnect.service;
 
 import edu.team9.fitconnect.model.Comment;
 import edu.team9.fitconnect.model.DataTransferObject.CommentDTO;
-import edu.team9.fitconnect.model.Like;
 import edu.team9.fitconnect.model.User;
 import edu.team9.fitconnect.repository.CommentRepository;
-import edu.team9.fitconnect.repository.LikeRepository;
 import edu.team9.fitconnect.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,9 @@ public class CommentService {
         return comments;
     }
 
+    public Optional<Comment> getCommentById(UUID id){
+        return commentRepository.findById(id);
+    }
     public void saveComment(String email, String comment, UUID postId){
         commentRepository.save(new Comment(UUID.randomUUID(), email, comment, postId, LocalDateTime.now()));
     }

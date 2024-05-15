@@ -14,8 +14,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class CommentDTO {
-    @JsonIgnore
-    private UUID commentId;
+    private UUID id;
     private String userEmail;
     private String firstName;
     private String lastName;

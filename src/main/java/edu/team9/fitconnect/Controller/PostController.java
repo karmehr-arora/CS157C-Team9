@@ -1,5 +1,6 @@
 package edu.team9.fitconnect.Controller;
 
+import edu.team9.fitconnect.model.Comment;
 import edu.team9.fitconnect.model.DataTransferObject.UserPostDTO;
 import edu.team9.fitconnect.model.Photo;
 import edu.team9.fitconnect.model.Post;
@@ -18,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static edu.team9.fitconnect.Config.AllowedFileTypes.isImageFile;
@@ -130,6 +132,27 @@ public class PostController {
             return ResponseEntity.ok("Comment saved");
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to create post");
+        }
+    }
+
+    @PostMapping("/delete-comment")
+    public ResponseEntity<?> deleteComment(@RequestBody HashMap<String, String> params, Principal principal){
+        try{
+            UUID id = UUID.fromString(params.get("id"));
+            Optional<Comment> opComment = commentService.getCommentById(id);
+            if(opComment.isPresent()){
+                Comment c = opComment.get();
+                if(c.getUserEmail().equals(principal.getName())){
+                    commentService.deleteComment(id);
+                    return ResponseEntity.ok("Comment deleted");
+                }else{
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Sign in with correct user to delete");
+                }
+            }else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Comment not found");
+            }
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid id");
         }
     }
 
