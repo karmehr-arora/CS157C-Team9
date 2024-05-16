@@ -2,18 +2,38 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/NavLogin :: navbar}"></div>
-<h1>Login</h1>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> Email: <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+<h1 class="text-center fw-bold mt-3">Login to FitConnect</h1>
+<div class="container">
+    <div th:if="${param.error}">
+        <div class="alert alert-danger" role="alert">
+            ❌ Login information incorrect
+        </div>
+    </div>
+    <div th:if="${param.logout}">
+        <div class="alert alert-success" role="alert">
+            ✅ You have been logged out
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 d-none d-lg-block"></div>
+        <div class="col-12 col-lg-4 align-self-center">
+            <div class="card p-4 mt-3">
+                <form th:action="@{/login}" method="post" class="mb-0">
+                    <label for="usernameinput" class="form-label">Email</label>
+                    <input type="email" name="username" id="usernameinput" class="form-control">
 
+                    <label for="inputPassword5" class="form-label mt-2">Password</label>
+                    <input type="password" name="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
+                    <div id="passwordHelpBlock" class="form-text">
+                        Passwords are secured using bcrypt encryption
+                    </div>
+
+                    <button class="btn btn-primary mt-3" type="submit" value="Sign In">Sign In</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>
