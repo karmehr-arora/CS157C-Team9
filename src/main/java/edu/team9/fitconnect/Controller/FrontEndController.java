@@ -51,12 +51,11 @@ public class FrontEndController {
     }
 
     @PostMapping(value = "/newaccount")
-    public String createAccount(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName, @RequestParam("email") String email, @RequestParam("displayName") String displayName, @RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, @RequestParam("weight") int weight, @RequestParam("heightInInches") int heightInInches){
-        if(!(email.equals(userService.loadUserByUsername(email).getUsername()))){
-            if(password.equals(confirmPassword)){
-                userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, password, null, null, User.Role.USER, weight);
-                return "main/login";
-            }
+    public String createAccount(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String displayName, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam int weight, @RequestParam int heightInInches){
+        // if email doesn't already exist, do the following
+        if (password.equals(confirmPassword)) {
+            userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, password, null, null, User.Role.USER, weight);
+            return "main/login";
         }
         return "main/signup";
     }
@@ -78,18 +77,25 @@ public class FrontEndController {
         if (encoder.matches(password, user.getPassword())){
             if(newPassword.equals(confirmNewPassword)){
                 userService.updatePassword(encoder.encode(newPassword), principal.getName());
-                return "main/login";
+                return "main/Login";
             }
         }
-        return "/account";
+        return "main/Account";
     }
 
-//    @PostMapping(value = "/delete")
-//    public void deleteAccount(@RequestParam String userID, @RequestParam String userPassword){
-//        if (userPassword.equals(user.getPassword())){
-//            user.delete();
-//        }
-//    }
+    @PostMapping(value = "/delete")
+    public String deleteAccount(@RequestParam String email, @RequestParam String userPassword, Principal principal){
+        User user = (User) userService.loadUserByUsername(principal.getName());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if(email.equals(user.getEmail())) {
+            if (encoder.matches(userPassword, user.getPassword())) {
+                userService.deleteAccount(user);
+                return "main/Login";
+            }
+        }
+        return "main/Account";
+
+    }
 
     @GetMapping("/login")
     public String getLogin() {

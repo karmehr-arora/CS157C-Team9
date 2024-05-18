@@ -2,30 +2,58 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/NavLogin :: navbar}"></div>
-<h1>Sign Up</h1>
-<h3>Create your account here!</h3>
-<div th:if="${param.error}">
-    <label style="color:red"> Account could not be created </label>
-</div>
-<form th:action="@{/newaccount}" method="post">
-    <div><label> First Name: <input type="text" name="firstName"/> </label></div>
-    <div><label> Last Name: <input type = "text" name="lastName"> </label></div>
-
-    <div><label> Email: <input type="text" name="email"/> </label></div>
+<h1 class="text-center fw-bold mt-3">Sign up FitConnect</h1>
+<div class="container">
+    <div th:if="${param.error}">
+        <div class="alert alert-danger" role="alert">
+            ❌ Account information incorrect
+        </div>
+    </div>
     <div th:if="${param.email}">
-        <label style="color:red"> This email may already in use </label>
+        <div class="alert alert-success" role="alert">
+            ❌ This email is already in use
+        </div>
     </div>
-    <div><label> Display Name: <input type = "text" name="displayName"> </label></div>
-
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><label> Confirm Password: <input type="password" name="confirmPassword"/> </label></div>
     <div th:if="${param.password}">
-        <label style="color:red"> The passwords may not match </label>
+        <div class="alert alert-success" role="alert">
+            ❌ Passwords do not match
+        </div>
     </div>
-    <div><label> Weight: <input type="number" name="weight"/> </label></div>
-    <div><label> Height (Inches): <input type = "number" name="heightInInches"> </label></div>
-    <div><input type="submit" value="Create"/></div>
-</form>
+    <div class="row">
+        <div class="col-lg-4 d-none d-lg-block"></div>
+        <div class="col-12 col-lg-4 align-self-center">
+            <div class="card p-4 mt-3">
 
+                <form th:action="@{/newaccount}" method="post" class="mb-0">
+                    <label for="first" class="form-label">First Name</label>
+                    <input type="text" name="firstName" id="first" class="form-control" required/>
+
+                    <label for="last" class="form-label">Last Name</label>
+                    <input type = "text" name="lastName" id="last" class="form-control" required>
+
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" name="email" id="email" class="form-control" required/>
+
+                    <label for="display" class="form-label">Display Name</label>
+                    <input type = "text" name="displayName" id="display" class="form-control" required>
+
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" required/>
+
+                    <label for="cpassword" class="form-label"> Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="cpassword" class="form-control" required/>
+
+                    <label for="weight" class="form-label"> Weight</label>
+                    <input type="number" name="weight" id="weight" class="form-control" required/>
+                    <label for="height" class="form-label"> Height (inches)</label>
+                    <input type = "number" name="heightInInches" id="height" class="form-control" required>
+
+                    <button class="btn btn-primary mt-3" type="submit" value="Create">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

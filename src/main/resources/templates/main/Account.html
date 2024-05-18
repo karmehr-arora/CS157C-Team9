@@ -45,9 +45,9 @@
                 <h2>Update Password</h2>
                 <form th:action ="@{/updatepassword}" method="post">
                     <div class="mb-3">
-                        <div><label> Current Password: <input type="password" name="password"/> </label></div>
-                        <div><label> New Password: <input type="password" name="newPassword"/> </label></div>
-                        <div><label> Confirm New Password: <input type="password" name="confirmNewPassword"/> </label></div>
+                        <div><label> Current Password: <input type="password" name="password" required/> </label></div>
+                        <div><label> New Password: <input type="password" name="newPassword" required/> </label></div>
+                        <div><label> Confirm New Password: <input type="password" name="confirmNewPassword" required/> </label></div>
                         <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
                         <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
                     </div>
@@ -59,8 +59,8 @@
                 <h2>Delete Account</h2>
                 <form th:action ="@{/delete}" method="post">
                     <div class="mb-3">
-                        <div><label> Username: <input type="text" name="displayName"/> </label></div>
-                        <div><label> Password: <input type="password" name="password"/> </label></div>
+                        <div><label> Email: <input type="text" name="email" required/> </label></div>
+                        <div><label> Password: <input type="password" name="userPassword" required/> </label></div>
                         <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
                         <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
                     </div>

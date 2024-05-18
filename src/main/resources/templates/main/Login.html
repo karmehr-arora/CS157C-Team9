@@ -20,10 +20,10 @@
             <div class="card p-4 mt-3">
                 <form th:action="@{/login}" method="post" class="mb-0">
                     <label for="usernameinput" class="form-label">Email</label>
-                    <input type="email" name="username" id="usernameinput" class="form-control">
+                    <input type="email" name="username" id="usernameinput" class="form-control" required>
 
                     <label for="inputPassword5" class="form-label mt-2">Password</label>
-                    <input type="password" name="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock">
+                    <input type="password" name="password" id="inputPassword5" class="form-control" aria-describedby="passwordHelpBlock" required>
                     <div id="passwordHelpBlock" class="form-text">
                         Passwords are secured using bcrypt encryption
                     </div>
