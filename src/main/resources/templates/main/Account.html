@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
@@ -33,9 +33,13 @@
                 <h2>Update Display Name</h2>
                 <form th:action ="@{/account}" method="post">
                     <div class="mb-3">
-                        <div><label> Display Name : <input type="text" name="displayName"/> </label></div>
-                        <div><label> Confirm Display Name: <input type="text" name="confirmDisplayName"/> </label></div>
-                        <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
+                        <label for="display" class="form-label">Display Name</label>
+                        <input type="text" name="displayName" id="display" class="form-control" required/>
+
+                        <label for="cdisplay" class="form-label">Confirm Display Name</label>
+                        <input type="text" name="confirmDisplayName" id="cdisplay" class="form-control" required/>
+
+                        <button class="btn btn-primary mt-3" type="submit" value="Confirm">Confirm</button>
                     </div>
                 </form>
             </div>
@@ -45,10 +49,16 @@
                 <h2>Update Password</h2>
                 <form th:action ="@{/updatepassword}" method="post">
                     <div class="mb-3">
-                        <div><label> Current Password: <input type="password" name="password" required/> </label></div>
-                        <div><label> New Password: <input type="password" name="newPassword" required/> </label></div>
-                        <div><label> Confirm New Password: <input type="password" name="confirmNewPassword" required/> </label></div>
-                        <div><p>Please note that you will be automatically logged out after changing passwords</p></label></div>
+                        <label for="pass" class="form-label"> Current Password</label>
+                        <input type="password" name="password" id="pass" class="form-control" required/>
+
+                        <label for="npass" class="form-label"> New Password/></label>
+                        <input type="password" name="newPassword" id="npass" class="form-control" required>
+
+                        <label for="cpass" class="form-label"> Confirm New Password</label>
+                        <input type="password" name="confirmNewPassword" id="cpass" class="form-control" required/>
+
+                        <div><p>Please note that you will be automatically logged out after changing passwords</p></div>
                         <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
                     </div>
                 </form>
@@ -59,10 +69,14 @@
                 <h2>Delete Account</h2>
                 <form th:action ="@{/delete}" method="post">
                     <div class="mb-3">
-                        <div><label> Email: <input type="text" name="email" required/> </label></div>
-                        <div><label> Password: <input type="password" name="userPassword" required/> </label></div>
-                        <div><p>Please note that this change is permanent and all of your account information will be deleted permanently</p></label></div>
-                        <div><input class="btn btn-primary mt-3" type="submit" value="Confirm"/></div>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="text" name="email" id="email" class="form-control" required/>
+
+                        <label for="upass" class="form-label">Password</label>
+                        <input type="password" name="userPassword" id="upass" class="form-control" required/>
+
+                        <p>Please note that this change is permanent and all of your account information will be deleted permanently</p>
+                        <button class="btn btn-primary mt-3" type="submit" value="Confirm">Confirm</button>
                     </div>
                 </form>
             </div>

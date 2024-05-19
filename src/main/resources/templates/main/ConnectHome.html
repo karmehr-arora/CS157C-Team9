@@ -12,7 +12,7 @@
         </div>
         <form id="searchCategories" th:action="@{/search}"  method="post">
             <label> <input class="form-control" type="text" name="find" placeholder="Topic" required/> </label>
-            <input type="submit" class="btn btn-primary" value="Search"/>
+            <button type="submit" class="btn btn-primary" value="Search">Search</button>
         </form>
     </div>
     <!--Grid of top available categories-->
@@ -20,7 +20,7 @@
         <div th:each="c: ${categories}">
             <a th:href="@{|/connect/category-feed/${c.category}|}">
                 <h3 th:text="${c.category}" class="g-col-1"></h3>
-                <img src="/files/category/${c.fileName}" th:alt="${c.fileName}" class="category-icon rounded me-3" height="100"/>
+                <img th:src="@{'/files/category/' + ${c.getFileName()}}" th:alt="${c.fileName}" class="category-icon rounded me-3" height="100"/>
             </a>
         </div>
     </div>
