@@ -67,14 +67,48 @@
     .split-details.show {
         display: block;
     }
+
+    /* Flexbox layout for side-by-side tables */
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .table-container table {
+        flex: 0 0 48%;
+    }
 </style>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
 <div class="container">
-<!--    <h2>User Workouts for the Day</h2>-->
-<!--    <ul id="workoutList">-->
-<!--        &lt;!&ndash; Workout data will be displayed here &ndash;&gt;-->
-<!--    </ul>-->
+    <h2>User Workouts</h2>
+    <!-- Dropdown button for chart duration -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="chartToggleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Select Chart Duration
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="chartToggleDropdown">
+            <li><button class="dropdown-item" onclick="toggleChart(15)">Last 15 Days</button></li>
+            <li><button class="dropdown-item" onclick="toggleChart(30)">Last 30 Days</button></li>
+            <li><button class="dropdown-item" onclick="toggleChart(60)">Last 60 Days</button></li>
+        </ul>
+    </div>
+    <canvas id="workoutChart" width="400" height="200"></canvas>
+    <h2>User Workouts for the Day</h2>
+    <table class="table" id="userWorkoutsTable">
+        <thead>
+        <tr>
+            <th>Workout Name</th>
+            <th>Sets</th>
+            <th>Reps</th>
+            <th>Weight</th>
+        </tr>
+        </thead>
+        <tbody id="userWorkoutsBody">
+        <!-- Workout data for the day will be displayed here -->
+        </tbody>
+    </table>
     <h2>Workout</h2>
     <form method="post" id="workoutForm">
         <div class="form-group">
@@ -140,6 +174,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script>
     /* Function to add a new row to the table */
     function addRow() {
@@ -256,38 +292,191 @@
         }
     }
 
-    function fetchUserWorkouts() {
-        fetch('/workouts/all')
-            .then(response => response.json())
+    function fetchUserWorkoutsForToday() {
+        fetch('/workouts/today')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
-                displayWorkouts(data);
-                console.log("Hello");
+                console.log('Fetched workouts: ', data);
+                displayUserWorkouts(data);
+                //createWorkoutChart(data);
             })
             .catch(error => console.error('Error fetching workouts:', error));
     }
 
-    // Function to display user workouts on the HTML page
-    function displayWorkouts(workouts) {
-        var workoutList = document.getElementById('workoutList');
-        workoutList.innerHTML = ''; // Clear previous content
+    function fetchUserWorkouts(duration) {
+        fetch(`/workouts/` + duration)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched workouts: ', data);
+                createWorkoutChart(data);
+            })
+            .catch(error => console.error('Error fetching workouts:', error));
+    }
+
+    function displayUserWorkouts(workouts) {
+        var userWorkoutsBody = document.getElementById('userWorkoutsBody');
+        userWorkoutsBody.innerHTML = ''; // Clear previous content
+
+        // Sort workouts by workout name and then by set
+        workouts.sort((a, b) => {
+            if (a.nameOfWorkout !== b.nameOfWorkout) {
+                return a.nameOfWorkout.localeCompare(b.nameOfWorkout);
+            }
+            return a.currentSet - b.currentSet;
+        });
 
         if (workouts && workouts.length > 0) {
             workouts.forEach(workout => {
-                var listItem = document.createElement('li');
-                listItem.textContent = workout.nameOfWorkout;
-                workoutList.appendChild(listItem);
+                var row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${workout.nameOfWorkout}</td>
+                    <td>${workout.currentSet}</td>
+                    <td>${workout.reps}</td>
+                    <td>${workout.weight}</td>
+                `;
+                userWorkoutsBody.appendChild(row);
             });
         } else {
-            var noWorkoutsMessage = document.createElement('p');
-            noWorkoutsMessage.textContent = 'No workouts available';
-            workoutList.appendChild(noWorkoutsMessage);
+            var noWorkoutsRow = document.createElement('tr');
+            noWorkoutsRow.innerHTML = '<td colspan="4">No workouts available for the day</td>';
+            userWorkoutsBody.appendChild(noWorkoutsRow);
         }
     }
 
     // Fetch user workouts when the page loads
     window.onload = function() {
-        fetchUserWorkouts();
+        fetchUserWorkoutsForToday();
     };
+
+    var chart;
+
+    function createWorkoutChart(workouts) {
+        const datasets = {};
+
+        // Iterate through each workout to find the highest weight
+        workouts.forEach(workout => {
+            const workoutName = workout.nameOfWorkout;
+            const weight = workout.weight;
+
+            // Check if the workout dataset exists
+            if (!datasets[workoutName]) {
+                datasets[workoutName] = {
+                    label: workoutName,
+                    data: [],
+                    fill: false,
+                    borderColor: getColorForWorkout(workoutName),
+                    tension: 0.4
+                };
+            }
+
+            // Check if weight is the highest for this workout
+            if (weight > datasets[workoutName].maxWeight || !datasets[workoutName].maxWeight) {
+                datasets[workoutName].maxWeight = weight;
+            }
+        });
+
+        // Add workout data to the datasets
+        workouts.forEach(workout => {
+            const workoutName = workout.nameOfWorkout;
+
+            // Add data point with the highest weight for each workout
+            datasets[workoutName].data.push({
+                x: new Date(workout.date),
+                y: datasets[workoutName].maxWeight
+            });
+        });
+
+        // Create the chart using datasets
+        const ctx = document.getElementById('workoutChart').getContext('2d');
+        if (chart) {
+            chart.destroy();
+        }
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: Object.values(datasets)
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Workout Progress'
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day'
+                        },
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Highest Weight (lbs)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // Function to generate a color based on the workout name
+    function getColorForWorkout(workoutName) {
+        // You can use a deterministic color generation algorithm
+        // based on the workout name
+        // Here's a simple example using the hash code of the name
+        const hash = hashCode(workoutName);
+        return '#' + Math.abs(hash).toString(16).substring(0, 6);
+    }
+
+    // Function to calculate the hash code of a string
+    // This function is used for color generation
+    function hashCode(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
+
+    // Function to update dropdown button text
+    function updateDropdownButton(text) {
+        document.getElementById("chartToggleDropdown").innerText = text;
+    }
+
+    // Function to toggle chart based on selected duration
+    function toggleChart(duration) {
+        updateDropdownButton("Last " + duration + " Days");
+        fetchUserWorkouts(duration);
+    }
+
+
+
+
+
+
+
 
 
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,18 +18,20 @@ public class WorkoutService {
     private WorkoutRepository workoutRepository;
 
     public void createWorkout(String email, String nameOfWorkout, int currentSet, int reps, double weight) {
-        System.out.println("made it to service");
         Workout workout = new Workout(UUID.randomUUID(), email, nameOfWorkout, currentSet, reps, weight, LocalDateTime.now());
         workoutRepository.save(workout);
-        System.out.print("Workout saved");
     }
 
     public List<Workout> getAllWorkouts(String email) {
-        return workoutRepository.findAllByUserEmail(email);
+        return workoutRepository.findAllByUserId(email);
     }
 
     public List<Workout> getAllWorkoutsByUserAndDate(String email, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return workoutRepository.findByUserEmailAndWorkoutDate(email, startDateTime, endDateTime);
+        System.out.println(email);
+        System.out.println(startDateTime);
+        System.out.println(endDateTime);
+
+        return workoutRepository.findByUserIdAndDateBetween(email, startDateTime, endDateTime);
     }
 
     public Workout getWorkoutById(UUID id) {

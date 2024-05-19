@@ -43,15 +43,14 @@ public class WorkoutController {
             double weight = Double.parseDouble(workout.get("weight"));
             System.out.println(weight);
             workoutService.createWorkout(principal.getName(),workoutName, currentSet, reps, weight);
-            System.out.println("Before response entity");
             return ResponseEntity.ok("Workout created successfully");
         }catch(Exception e){
             return ResponseEntity.badRequest().body(e.toString());
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Workout>> getUserWeights(Model model, Principal principal) {
+    @GetMapping("/today")
+    public ResponseEntity<List<Workout>> getUserWorkoutsToday(Principal principal) {
         try {
             String username = principal.getName();
             LocalDate currentDate = LocalDate.now();
@@ -60,9 +59,6 @@ public class WorkoutController {
 
             // Call the UserService to fetch user workouts
             List<Workout> userWorkouts = workoutService.getAllWorkoutsByUserAndDate(username, startOfDay, endOfDay);
-            for (Workout workout : userWorkouts) {
-                System.out.println(workout.toString());
-            }
 
             return ResponseEntity.ok(userWorkouts);
         } catch (Exception e) {
@@ -70,13 +66,23 @@ public class WorkoutController {
         }
     }
 
+    @GetMapping("/{duration}")
+    public ResponseEntity<List<Workout>> getUserWorkoutsByDuration(@PathVariable("duration") String duration, Principal principal) {
+        try {
+            long durationLong = Long.parseLong(duration);
+            String username = principal.getName();
+            LocalDate endDate = LocalDate.now();
+            LocalDate startDate = endDate.minusDays(durationLong);
 
-//    @GetMapping("/workouts")
-//    public String getWorkouts(Model model){
-//        List<Workout> workouts = workoutService.getAllWorkouts();
-//        model.addAttribute("workouts", workouts);
-//        // Logging the contents of the list
-//        return "main/workout";
-//    }
+            LocalDateTime startOfPeriod = LocalDateTime.of(startDate, LocalTime.MIN);
+            LocalDateTime endOfPeriod = LocalDateTime.of(endDate, LocalTime.MAX);
+
+            List<Workout> userWorkouts = workoutService.getAllWorkoutsByUserAndDate(username, startOfPeriod, endOfPeriod);
+
+            return ResponseEntity.ok(userWorkouts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
 }
