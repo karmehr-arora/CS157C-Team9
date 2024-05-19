@@ -3,30 +3,38 @@
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
 <h1 class="fw-bold text-center mt-2">Connect</h1>
-<div id="rowFormContainer" class="fw-bold text-center mt-2">
-    <form id="searchCategories" th:action="@{/search}"  method="post">
-        <div><input class="form-control" type="text" name="find" placeholder="Topic"/></div>
-        <div><input type="submit" class="btn btn-primary" value="Search"/></div>
-    </form>
-</div>
-
-<!--Grid of top 6 available categories-->
-<div class="grid text-center">
-    <a href="connect/category-feed/One"><div class="g-col-4">Category 1</div></a>
-    <a href="connect/category-feed/Two"><div class="g-col-4">Category 2</div></a>
-    <a href="connect/category-feed/Three"><div class="g-col-4">Category 3</div></a>
-    <a href="connect/category-feed/Four"><div class="g-col-4">Category 4</div></a>
-    <a href="connect/category-feed/Five"><div class="g-col-4">Category 5</div></a>
-    <a href="connect/category-feed/Six"><div class="g-col-4">Category 6</div></a>
+<div class="container-md">
+    <div id="rowFormContainer" class="fw-bold text-center mt-1">
+        <div th:if="${param.search}">
+            <div class="alert alert-danger" role="alert">
+                ❌ Category Does Not Exist
+            </div>
+        </div>
+        <form id="searchCategories" th:action="@{/search}"  method="post">
+            <label> <input class="form-control" type="text" name="find" placeholder="Topic" required/> </label>
+            <input type="submit" class="btn btn-primary" value="Search"/>
+        </form>
+    </div>
+    <!--Grid of top available categories-->
+    <div class="grid text-left">
+        <div th:each="c: ${categories}">
+            <a th:href="@{|/connect/category-feed/${c.category}|}">
+                <h3 th:text="${c.category}" class="g-col-1"></h3>
+                <img src="/files/category/${c.fileName}" th:alt="${c.fileName}" class="category-icon rounded me-3" height="100"/>
+            </a>
+        </div>
+    </div>
 </div>
 <br><br>
-<div class="fw-bold text-center mt-2">
-    <h1>Start a new Discussion!</h1>
-    <form enctype="multipart/form-data" th:action="@{/newUpload}" method="POST">
-        <div><input class="form-control" type="text" name="Category" placeholder="Topic"/></div>
-        <div><input class="form-control" type="file" name="file" id="discussionPhoto"></div>
-        <input class="btn btn-success" type="submit" value="Create New">
-    </form>
+<div class="container-sm">
+    <div class="fw-bold text-center mt-2">
+        <h1>Start a new Discussion!</h1>
+        <form enctype="multipart/form-data" th:action="@{/newUpload}" method="POST">
+            <div><input class="form-control" type="text" name="Category" placeholder="Topic"/></div>
+            <div><input class="form-control" type="file" name="file" id="discussionPhoto"></div>
+            <input class="btn btn-success" type="submit" value="Create New">
+        </form>
+    </div>
 </div>
 </body>
 </html>

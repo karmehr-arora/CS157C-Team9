@@ -13,12 +13,21 @@ import java.util.List;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-    List<Category> findAllCategories(){
-        return categoryRepository.findAll();
+    public List<Category> findAllCategories() throws Exception {
+        List<Category> category = categoryRepository.findAll();
+        if(!category.isEmpty()){
+            return category;
+        }else{
+            throw new Exception("No Categories was not found");
+        }
     }
 
-    public void insertCategory(String ctg, String fileName, byte[] data, String type){
-        System.out.println("CategoryService");
+    public List<Category> searchCategory(String name) {
+        List<Category> category = categoryRepository.findCategoryByCategory(name);
+        return category;
+    }
+
+    public void insertCategory(String ctg, String fileName, byte[] data, String type) {
         Category category = new Category(ctg, LocalDateTime.now(), fileName, ByteBuffer.wrap(data), type);
         categoryRepository.save(category);
     }

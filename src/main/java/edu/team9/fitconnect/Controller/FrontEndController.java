@@ -2,6 +2,7 @@ package edu.team9.fitconnect.Controller;
 
 import edu.team9.fitconnect.model.Post;
 import edu.team9.fitconnect.model.User;
+import edu.team9.fitconnect.service.CategoryService;
 import edu.team9.fitconnect.service.PostService;
 import edu.team9.fitconnect.service.UserService;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class FrontEndController {
     UserService userService;
     PostService postService;
+    CategoryService categoryService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -51,11 +53,22 @@ public class FrontEndController {
     }
 
     @PostMapping(value = "/newaccount")
-    public String createAccount(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String displayName, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam int weight, @RequestParam int heightInInches){
-        // if email doesn't already exist, do the following
-        if (password.equals(confirmPassword)) {
-            userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, password, null, null, User.Role.USER, weight);
-            return "main/login";
+    public String createAccount(@RequestParam String firstName, @RequestParam String lastName, @RequestParam String email, @RequestParam String displayName, @RequestParam String password, @RequestParam String confirmPassword, @RequestParam int weight, @RequestParam int heightInInches, Model model){
+        boolean pass = false;
+        boolean mail = false;
+        if(!userService.checkUser(email)) {
+            if (password.equals(confirmPassword)) {
+                userService.createUser(email, LocalDateTime.now(), displayName, null, firstName, weight, heightInInches, lastName, password, null, null, User.Role.USER, weight);
+                return "main/login";
+            }
+            else{
+                pass = true;
+                model.addAttribute("password", pass);
+            }
+        }
+        else{
+            mail = true;
+            model.addAttribute("email", mail);
         }
         return "main/signup";
     }
@@ -103,7 +116,8 @@ public class FrontEndController {
     }
 
     @GetMapping("/connect")
-    public String getConnectHome() {
+    public String getConnectHome(Model model) throws Exception {
+        model.addAttribute("categories", categoryService.findAllCategories());
         return "main/ConnectHome";
     }
 
@@ -156,7 +170,9 @@ public class FrontEndController {
 
     @GetMapping("/connect/category-feed/{category}")
     public String getCategoryFeed(@PathVariable("category") String category, Model model) {
-        //todo: mehr make sur to query database to see if category exists before continuing
+        if(categoryService.searchCategory(category).isEmpty()){
+            return "main/ConnectHome";
+        }
         model.addAttribute("categoryName", category);
         return "main/CategoryFeed";
     }

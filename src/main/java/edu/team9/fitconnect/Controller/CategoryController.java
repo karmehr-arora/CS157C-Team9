@@ -1,18 +1,21 @@
 package edu.team9.fitconnect.Controller;
 
-
+import edu.team9.fitconnect.model.Category;
+import edu.team9.fitconnect.repository.CategoryRepository;
 import edu.team9.fitconnect.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+import org.springframework.ui.Model;
+
 
 import static edu.team9.fitconnect.Config.AllowedFileTypes.isImageFile;
 
@@ -21,17 +24,20 @@ import static edu.team9.fitconnect.Config.AllowedFileTypes.isImageFile;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
-
+    private CategoryRepository categoryRepository;
     @PostMapping("/newUpload")
     public ResponseEntity<String> uploadCategoryPhoto(@RequestParam("Category") String name, @RequestParam("file") MultipartFile file, Principal principal) {
-        System.out.println("Category Controller");
         try {
             //Find user signed in
             if (principal != null) {
                 try {
                     if (isImageFile(file.getContentType())) {
-                        categoryService.insertCategory(name, file.getOriginalFilename(), file.getBytes(), file.getContentType());
-                        return ResponseEntity.ok("File uploaded successfully.");
+                        if(categoryRepository.findCategoryByCategory(name).isEmpty()) {
+                            categoryService.insertCategory(name, file.getOriginalFilename(), file.getBytes(), file.getContentType());
+                            return ResponseEntity.ok("File uploaded successfully.");
+                        } else{
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Category Already Exists.");
+                        }
                     } else {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Invalid file type.");
                     }
@@ -45,4 +51,22 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You must be signed in to upload.");
         }
     }
+
+    @PostMapping(value = "/search")
+    public String searchCategories(@RequestParam("find") String find, Model model){
+        boolean categoryNotFound = false;
+        List<Category> category= categoryService.searchCategory(find);
+        if(!category.isEmpty()) {
+            model.addAttribute("search", categoryNotFound);
+            // linking incorrect?
+            return "/connect/category-feed/" + category.get(0).getCategory();
+        }
+        else {
+            categoryNotFound = true;
+            model.addAttribute("search", categoryNotFound);
+            //linking issue?
+            return "main/ConnectHome";
+        }
+    }
+
 }

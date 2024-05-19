@@ -2,7 +2,7 @@
 <head th:replace="~{components/Header :: header('Fitconnect')}"></head>
 <body>
 <div th:replace="~{components/NavLogin :: navbar}"></div>
-<h1 class="text-center fw-bold mt-3">Sign up FitConnect</h1>
+<h1 class="text-center fw-bold mt-3">Sign Up FitConnect</h1>
 <div class="container">
     <div th:if="${param.error}">
         <div class="alert alert-danger" role="alert">
@@ -10,12 +10,12 @@
         </div>
     </div>
     <div th:if="${param.email}">
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-danger" role="alert">
             ❌ This email is already in use
         </div>
     </div>
     <div th:if="${param.password}">
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-danger" role="alert">
             ❌ Passwords do not match
         </div>
     </div>
