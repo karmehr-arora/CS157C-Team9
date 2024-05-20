@@ -145,13 +145,13 @@ public class FrontEndController {
                     model.addAttribute("post", post);
                     return "main/EditPost";
                 }else{
-                    //todo: error for invalid user
+                    //invalid user
                 }
             }catch (Exception e){
-                //todo: error for post not found
+                //post not found
             }
         }catch(Exception e){
-            //todo: error for invalid id
+            //for invalid id
         }
 
 
@@ -170,9 +170,9 @@ public class FrontEndController {
 
     @GetMapping("/connect/category-feed/{category}")
     public String getCategoryFeed(@PathVariable("category") String category, Model model) {
-        if(categoryService.searchCategory(category).isEmpty()){
-            return "main/ConnectHome";
-        }
+//        if(categoryService.searchCategory(category).isEmpty()){
+//            return "main/ConnectHome";
+//        }
         model.addAttribute("categoryName", category);
         return "main/CategoryFeed";
     }

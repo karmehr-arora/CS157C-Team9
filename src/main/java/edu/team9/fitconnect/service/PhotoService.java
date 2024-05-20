@@ -18,7 +18,6 @@ public class PhotoService {
     private PhotoRepository photoRepository;
 
     public void uploadFile(String fileName, byte[] fileBytes, User user, String contentType) {
-        //todo: include file validation
         Photo fileEntity = new Photo(UUID.randomUUID(), fileName, ByteBuffer.wrap(fileBytes), contentType, LocalDateTime.now(), user.getWeight(), user.getEmail());
         photoRepository.save(fileEntity);
     }
