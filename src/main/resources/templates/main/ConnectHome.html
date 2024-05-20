@@ -20,7 +20,9 @@
         <div th:each="c: ${categories}">
             <a th:href="@{|/connect/category-feed/${c.category}|}">
                 <h3 th:text="${c.category}" class="g-col-1"></h3>
-                <img th:src="@{'/files/category/' + ${c.getFileName()}}" th:alt="${c.fileName}" class="category-icon rounded me-3" height="100"/>
+                <img src="/files/icon/${c.category}" th:alt="${c.fileName}" class="progress-photo rounded" height="100"/>
+                <div class="overflow-x-auto" id="image-container" style="white-space: nowrap"></div>
+                <script src="script.js"></script>
             </a>
         </div>
     </div>
@@ -30,11 +32,55 @@
     <div class="fw-bold text-center mt-2">
         <h1>Start a new Discussion!</h1>
         <form enctype="multipart/form-data" th:action="@{/newUpload}" method="POST">
-            <div><input class="form-control" type="text" name="Category" placeholder="Topic"/></div>
-            <div><input class="form-control" type="file" name="file" id="discussionPhoto"></div>
+            <label for="newCategory" class="form-label"></label>
+            <input class="form-control" type="text" name="Category" id="newCategory" placeholder="Topic"/>
+
+            <label for="discussionPhoto" class="form-label"></label>
+            <input class="form-control" type="file" name="file" id="discussionPhoto">
+
             <input class="btn btn-success" type="submit" value="Create New">
         </form>
     </div>
 </div>
+
+<script>
+    // get photos, render them
+    function refresh(){
+        const categoryFetch = fetch("/files/icon")
+        Promise.all([categoryFetch])
+            .then(responses => {
+                return Promise.all([responses[0]]);
+            })
+            .then(data => {
+                return Promise.all([data[0].json()]);
+            })
+            .then(data => {
+                renderPhotos(sortByCreatedDesc(data[0]));
+            })
+            .catch((response)=>{
+                console.log(response);
+                response.json()
+                    .then(errorData => {
+                        console.log(errorData);
+                    })
+                    .catch(error => {
+                        console.error("Error parsing error response:", error);
+                    });
+            });
+    }
+    refresh();
+
+    function renderPhotos(pics){
+        let html = "";
+        pics.forEach(category => {
+            html+= `
+            <div class="bg-secondary-subtle m-2 rounded p-0 d-inline-block" style="width:300px;">
+                <img class="progress-photo rounded" alt="category-icon" src="/files/icon/${category.category}"/>
+            </div>
+            `;
+        });
+        document.querySelector("#image-container").innerHTML = html;
+    }
+</script>
 </body>
 </html>
