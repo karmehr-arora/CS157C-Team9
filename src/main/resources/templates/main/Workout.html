@@ -394,37 +394,43 @@
     function createWorkoutChart(workouts) {
         const datasets = {};
 
-        // Iterate through each workout to find the highest weight
+        // Iterate through each workout to find the highest weight for each day
         workouts.forEach(workout => {
             const workoutName = workout.nameOfWorkout;
             const weight = workout.weight;
+            const date = new Date(workout.date).toDateString(); // Convert date to string to use as key
 
-            // Check if the workout dataset exists
+            // Check if the dataset exists for this workout
             if (!datasets[workoutName]) {
                 datasets[workoutName] = {
                     label: workoutName,
-                    data: [],
+                    data: [], // Initialize data array
                     fill: false,
                     borderColor: getColorForWorkout(workoutName),
-                    tension: 0.4
+                    tension: 0.4,
+                    maxWeightByDate: {} // Initialize object to store max weight by date
                 };
             }
 
-            // Check if weight is the highest for this workout
-            if (weight > datasets[workoutName].maxWeight || !datasets[workoutName].maxWeight) {
-                datasets[workoutName].maxWeight = weight;
+            // Update max weight for this workout on this date
+            if (!datasets[workoutName].maxWeightByDate[date] || weight > datasets[workoutName].maxWeightByDate[date]) {
+                datasets[workoutName].maxWeightByDate[date] = weight;
             }
         });
 
-        // Add workout data to the datasets
-        workouts.forEach(workout => {
-            const workoutName = workout.nameOfWorkout;
-
-            // Add data point with the highest weight for each workout
-            datasets[workoutName].data.push({
-                x: new Date(workout.date),
-                y: datasets[workoutName].maxWeight
+        // Add data points for each workout representing the highest weight for each day
+        Object.keys(datasets).forEach(workoutName => {
+            Object.entries(datasets[workoutName].maxWeightByDate).forEach(([date, weight]) => {
+                datasets[workoutName].data.push({
+                    x: new Date(date),
+                    y: weight
+                });
             });
+        });
+
+        // Sort data points by x-values (dates)
+        Object.values(datasets).forEach(dataset => {
+            dataset.data.sort((a, b) => a.x - b.x);
         });
 
         // Create the chart using datasets
@@ -461,13 +467,16 @@
                         display: true,
                         title: {
                             display: true,
-                            text: 'Highest Weight (lbs)'
+                            text: 'Weight (lbs)'
                         }
                     }
                 }
             }
         });
     }
+
+
+
 
 
     // Function to generate a color based on the workout name
