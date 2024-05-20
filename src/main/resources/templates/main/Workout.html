@@ -68,16 +68,18 @@
         display: block;
     }
 
-    /* Flexbox layout for side-by-side tables */
     .table-container {
         display: flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
         margin-top: 20px;
     }
 
-    .table-container table {
+    .user-workouts-section,
+    .log-workout-section {
         flex: 0 0 48%;
     }
+
 </style>
 <body>
 <div th:replace="~{components/Navigation :: navbar}"></div>
@@ -95,55 +97,60 @@
         </ul>
     </div>
     <canvas id="workoutChart" width="400" height="200"></canvas>
-    <h2>User Workouts for the Day</h2>
-    <table class="table" id="userWorkoutsTable">
-        <thead>
-        <tr>
-            <th>Workout Name</th>
-            <th>Sets</th>
-            <th>Reps</th>
-            <th>Weight</th>
-        </tr>
-        </thead>
-        <tbody id="userWorkoutsBody">
-        <!-- Workout data for the day will be displayed here -->
-        </tbody>
-    </table>
-    <h2>Workout</h2>
-    <form method="post" id="workoutForm">
-        <div class="form-group">
-            <label for="workoutName">Select Workout:</label>
-            <select class="form-control" id="workoutName" name="nameOfWorkout" onchange="checkCustom(this)">
-                <option value="" selected disabled>Select a Workout</option>
-                <option value="Bench Press">Bench Press</option>
-                <option value="Deadlift">Deadlift</option>
-                <option value="Squat">Squat</option>
-                <option value="Custom">Custom</option>
-                <!-- Add more common workouts as needed -->
-            </select>
-            <input type="text" class="form-control" id="customWorkout" name="customWorkout" style="display: none;" placeholder="Enter custom workout name">
+    <div class="table-container">
+        <div class="user-workouts-section">
+            <h2>Today's workouts</h2>
+            <table class="table table-striped table-bordered" id="userWorkoutsTable">
+                <thead>
+                <tr>
+                    <th scope="col">Workout Name</th>
+                    <th scope="col">Sets</th>
+                    <th scope="col">Reps</th>
+                    <th scope="col">Weight</th>
+                </tr>
+                </thead>
+                <tbody id="userWorkoutsBody">
+                <!-- Workout data for the day will be displayed here -->
+                </tbody>
+            </table>
         </div>
-        <table class="table" id="workoutTable">
-            <thead>
-            <tr>
-                <th>Sets</th>
-                <th>Reps</th>
-                <th>Weight</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>1</td>
-                <td><input type="number" class="form-control" name="reps[]" required></td>
-                <td><input type="number" class="form-control" name="weight[]" required></td>
-                <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
-            </tr>
-            <!-- Additional rows will be added dynamically -->
-            </tbody>
-        </table>
-        <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
-        <button type="button" class="btn btn-success" onclick="submitWorkout()">Create Workout</button>
-    </form>
+        <div class="log-workout-section">
+            <h2>Log workout</h2>
+            <form method="post" id="workoutForm">
+                <div class="form-group">
+                    <label for="workoutName">Select Workout:</label>
+                    <select class="form-control" id="workoutName" name="nameOfWorkout" onchange="checkCustom(this)">
+                        <option value="" selected disabled>Select a Workout</option>
+                        <option value="Bench Press">Bench Press</option>
+                        <option value="Deadlift">Deadlift</option>
+                        <option value="Squat">Squat</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                    <input type="text" class="form-control" id="customWorkout" name="customWorkout" style="display: none;" placeholder="Enter custom workout name">
+                </div>
+                <table class="table" id="workoutTable">
+                    <thead>
+                    <tr>
+                        <th>Sets</th>
+                        <th>Reps</th>
+                        <th>Weight</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="number" class="form-control" name="reps[]" required></td>
+                        <td><input type="number" class="form-control" name="weight[]" required></td>
+                        <td><button type="button" class="btn btn-danger" onclick="deleteRow(this)">X</button></td>
+                    </tr>
+                    <!-- Additional rows will be added dynamically -->
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
+                <button type="button" class="btn btn-success" onclick="submitWorkout()">Create Workout</button>
+            </form>
+        </div>
+    </div>
     <h3 style="margin-top: 20px;">Suggested Workout Splits</h3>
     <div class="split-tiles">
         <div class="split-tile">
