@@ -144,7 +144,7 @@
         <button type="button" class="btn btn-primary" onclick="addRow()">Add Row</button>
         <button type="button" class="btn btn-success" onclick="submitWorkout()">Create Workout</button>
     </form>
-    <h3 style="margin-top: 20px;">Choose a Workout Split</h3>
+    <h3 style="margin-top: 20px;">Suggested Workout Splits</h3>
     <div class="split-tiles">
         <div class="split-tile">
             <div class="split-tile-inner" onclick="showSplitDetails('Push Pull Legs')">
@@ -167,7 +167,28 @@
             </div>
         </div>
         <!-- Add more split tiles as needed -->
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Full Body')">
+                <div class="split-tile-front">
+                    <h3>Full Body</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>A comprehensive workout targeting all major muscle groups in a single session.</p>
+                </div>
+            </div>
+        </div>
+        <div class="split-tile">
+            <div class="split-tile-inner" onclick="showSplitDetails('Bro Split')">
+                <div class="split-tile-front">
+                    <h3>Bro Split</h3>
+                </div>
+                <div class="split-tile-back">
+                    <p>A traditional bodybuilding split focusing on one or two muscle groups per day.</p>
+                </div>
+            </div>
+        </div>
     </div>
+
 
     <div id="splitDetails" class="split-details">
         <!-- Split details will be displayed here -->
@@ -279,18 +300,21 @@
     }
 
     function getSplitDetails(splitName) {
-        // You can implement logic here to fetch split details from a database or hardcoded data
-        // For now, return some hardcoded details based on the split name
         switch (splitName) {
             case 'Push Pull Legs':
-                return "Day 1: Push exercises (e.g., bench press, shoulder press). Day 2: Pull exercises (e.g., pull-ups, rows). Day 3: Leg exercises (e.g., squats, deadlifts).";
+                return "Day 1 (Push): Bench Press, Shoulder Press, Tricep Dips. Day 2 (Pull): Pull-Ups, Rows, Bicep Curls. Day 3 (Legs): Squats, Deadlifts, Lunges.";
             case 'Upper Lower':
-                return "Day 1: Upper body exercises (e.g., chest, back, arms). Day 2: Lower body exercises (e.g., quads, hamstrings, calves).";
+                return "Day 1 (Upper): Bench Press, Pull-Ups, Shoulder Press. Day 2 (Lower): Squats, Deadlifts, Leg Press.";
+            case 'Full Body':
+                return "A comprehensive workout targeting all major muscle groups in a single session. Recommended exercises: Squats, Deadlifts, Bench Press, Rows, Shoulder Press, Lunges.";
+            case 'Bro Split':
+                return "A traditional bodybuilding split focusing on one or two muscle groups per day. Example split: Day 1 (Chest & Triceps): Bench Press, Dumbbell Flyes, Tricep Pushdowns. Day 2 (Back & Biceps): Pull-Ups, Rows, Bicep Curls.";
             // Add more cases for additional split names
             default:
                 return "No details available.";
         }
     }
+
 
     function fetchUserWorkoutsForToday() {
         fetch('/workouts/today')
@@ -441,9 +465,6 @@
 
     // Function to generate a color based on the workout name
     function getColorForWorkout(workoutName) {
-        // You can use a deterministic color generation algorithm
-        // based on the workout name
-        // Here's a simple example using the hash code of the name
         const hash = hashCode(workoutName);
         return '#' + Math.abs(hash).toString(16).substring(0, 6);
     }
@@ -470,16 +491,6 @@
         updateDropdownButton("Last " + duration + " Days");
         fetchUserWorkouts(duration);
     }
-
-
-
-
-
-
-
-
-
-
 
 </script>
 </body>
