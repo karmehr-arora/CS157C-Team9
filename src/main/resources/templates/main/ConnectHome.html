@@ -20,7 +20,7 @@
         <div th:each="c: ${categories}">
             <a th:href="@{|/connect/category-feed/${c.category}|}">
                 <h3 th:text="${c.category}" class="g-col-1"></h3>
-                <img src="/files/icon/${c.category}" th:alt="${c.fileName}" class="progress-photo rounded" height="100"/>
+<!--                <img src="/files/icon/${c.category}" th:alt="${c.fileName}" class="progress-photo rounded" height="100"/>-->
                 <div class="overflow-x-auto" id="image-container" style="white-space: nowrap"></div>
                 <script src="script.js"></script>
             </a>
