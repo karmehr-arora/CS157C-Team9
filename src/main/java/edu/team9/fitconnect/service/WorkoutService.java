@@ -27,10 +27,6 @@ public class WorkoutService {
     }
 
     public List<Workout> getAllWorkoutsByUserAndDate(String email, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        System.out.println(email);
-        System.out.println(startDateTime);
-        System.out.println(endDateTime);
-
         return workoutRepository.findByUserIdAndDateBetween(email, startDateTime, endDateTime);
     }
 
