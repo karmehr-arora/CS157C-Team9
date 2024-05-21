@@ -18,7 +18,8 @@ public class CategoryService {
         if(!category.isEmpty()){
             return category;
         }else{
-            throw new Exception("No Categories was not found");
+            //throw new Exception("No Categories was not found");
+            return category;
         }
     }
 

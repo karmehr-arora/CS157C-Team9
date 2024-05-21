@@ -35,13 +35,9 @@ public class WorkoutController {
     public ResponseEntity<String> createWorkout(@RequestBody HashMap<String, String> workout, Principal principal ) {
         try{
             String workoutName = workout.get("workoutName");
-            System.out.println(workoutName);
             int currentSet = Integer.parseInt(workout.get("currentSet"));
-            System.out.println(currentSet);
             int reps = Integer.parseInt(workout.get("reps"));
-            System.out.println(reps);
             double weight = Double.parseDouble(workout.get("weight"));
-            System.out.println(weight);
             workoutService.createWorkout(principal.getName(),workoutName, currentSet, reps, weight);
             return ResponseEntity.ok("Workout created successfully");
         }catch(Exception e){
@@ -57,7 +53,7 @@ public class WorkoutController {
             LocalDateTime startOfDay = LocalDateTime.of(currentDate, LocalTime.MIN);
             LocalDateTime endOfDay = LocalDateTime.of(currentDate, LocalTime.MAX);
 
-            // Call the UserService to fetch user workouts
+            // Call the WorkoutService to fetch user workouts
             List<Workout> userWorkouts = workoutService.getAllWorkoutsByUserAndDate(username, startOfDay, endOfDay);
 
             return ResponseEntity.ok(userWorkouts);
